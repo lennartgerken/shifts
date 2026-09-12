@@ -26,12 +26,32 @@ protocol NotificationServicing {
   func removeAll()
 }
 
-struct NotificationService: NotificationServicing {
-  private let notificationCenter: UNUserNotificationCenter
-  private let calendar = Calendar.current
+protocol NotificationCenterContainer {
+  func add(_ request: UNNotificationRequest) async throws
+  func pendingNotificationRequests() async -> [UNNotificationRequest]
+  func removePendingNotificationRequests(withIdentifiers identifiers: [String])
+  func removeAllPendingNotificationRequests()
+  func authorizationStatus() async -> UNAuthorizationStatus
+  func requestAuthorization() async throws -> Bool
+}
 
-  init() {
-    self.notificationCenter = .current()
+struct SystemNotificationCenter: NotificationCenterContainer {
+  private let notificationCenter: UNUserNotificationCenter = .current()
+
+  func add(_ request: UNNotificationRequest) async throws {
+    try await notificationCenter.add(request)
+  }
+
+  func pendingNotificationRequests() async -> [UNNotificationRequest] {
+    await notificationCenter.pendingNotificationRequests()
+  }
+
+  func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {
+    notificationCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
+  }
+
+  func removeAllPendingNotificationRequests() {
+    notificationCenter.removeAllPendingNotificationRequests()
   }
 
   func authorizationStatus() async -> UNAuthorizationStatus {
@@ -42,6 +62,23 @@ struct NotificationService: NotificationServicing {
     try await notificationCenter.requestAuthorization(options: [
       .alert, .sound,
     ])
+  }
+}
+
+struct NotificationService: NotificationServicing {
+  private let notificationCenter: NotificationCenterContainer
+  private let calendar = Calendar.current
+
+  init(notificationCenter: NotificationCenterContainer = SystemNotificationCenter()) {
+    self.notificationCenter = notificationCenter
+  }
+
+  func authorizationStatus() async -> UNAuthorizationStatus {
+    await notificationCenter.authorizationStatus()
+  }
+
+  func requestAuthorization() async throws -> Bool {
+    try await notificationCenter.requestAuthorization()
   }
 
   @MainActor

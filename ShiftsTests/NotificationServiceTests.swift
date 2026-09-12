@@ -3,20 +3,49 @@ import UserNotifications
 
 @testable import Shifts
 
+final class FakeNotificationCenter: NotificationCenterContainer {
+  var requests: [UNNotificationRequest] = []
+
+  func add(_ request: UNNotificationRequest) async throws {
+    requests.append(request)
+  }
+
+  func pendingNotificationRequests() async -> [UNNotificationRequest] {
+    requests
+  }
+
+  func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {
+    requests.removeAll(where: { identifiers.contains($0.identifier) })
+  }
+
+  func removeAllPendingNotificationRequests() {
+    requests.removeAll()
+  }
+
+  func authorizationStatus() async -> UNAuthorizationStatus {
+    .authorized
+  }
+
+  func requestAuthorization() async throws -> Bool {
+    return true
+  }
+}
+
 @MainActor
 @Suite(.serialized)
 struct NotificationServiceTests {
   let calendar = Calendar.current
   let notificationService: NotificationService
-  let notificationCenter: UNUserNotificationCenter
+  let notificationCenter: NotificationCenterContainer
   let date1: Date
   let date2: Date
   var shift1: Shift
   var shift2: Shift
 
-  init() async {
-    notificationService = NotificationService()
-    notificationCenter = UNUserNotificationCenter.current()
+  init() async throws {
+    let fakeNotificationCenter = FakeNotificationCenter()
+    notificationService = NotificationService(notificationCenter: fakeNotificationCenter)
+    notificationCenter = fakeNotificationCenter
     notificationCenter.removeAllPendingNotificationRequests()
     date1 = calendar.date(
       byAdding: .day,
