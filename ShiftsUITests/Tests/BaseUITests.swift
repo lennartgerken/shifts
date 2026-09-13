@@ -8,9 +8,7 @@ class BaseUITests: XCTestCase {
     continueAfterFailure = false
     app = XCUIApplication()
     app.launchArguments += [
-      "-AppleLanguages", "(de)",
-      "-AppleLocale", "de_DE",
-      "--uitesting",
+      "--uitesting"
     ]
     app.launch()
   }
