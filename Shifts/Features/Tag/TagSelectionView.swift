@@ -57,9 +57,11 @@ struct TagSelectionView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    TagSelectionView(selectedTags: .constant([]))
-      .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      TagSelectionView(selectedTags: .constant([]))
+        .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif

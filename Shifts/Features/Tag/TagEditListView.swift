@@ -60,9 +60,11 @@ struct TagEditListView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    TagEditListView()
-      .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      TagEditListView()
+        .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif

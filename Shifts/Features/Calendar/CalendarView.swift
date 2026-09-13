@@ -163,21 +163,23 @@ struct CalendarView: View {
   }
 }
 
-#Preview {
-  let container = PreviewSupport.inMemoryContainer()
-  let textRecognitionService = TextRecognitionService()
-  let shiftParsingService = ShiftParsingService()
-  let shiftsImportService = ShiftsImportService(
-    textRecognitionService: textRecognitionService,
-    shiftParsingService: shiftParsingService,
-  )
-  let notificationService = NotificationService()
-  let settings = AppSettings()
+#if DEBUG
+  #Preview {
+    let container = PreviewSupport.inMemoryContainer()
+    let textRecognitionService = TextRecognitionService()
+    let shiftParsingService = ShiftParsingService()
+    let shiftsImportService = ShiftsImportService(
+      textRecognitionService: textRecognitionService,
+      shiftParsingService: shiftParsingService,
+    )
+    let notificationService = NotificationService()
+    let settings = AppSettings()
 
-  CalendarView(
-    shiftsImportService: shiftsImportService,
-    notificationService: notificationService
-  )
-  .modelContainer(container)
-  .environment(settings)
-}
+    CalendarView(
+      shiftsImportService: shiftsImportService,
+      notificationService: notificationService
+    )
+    .modelContainer(container)
+    .environment(settings)
+  }
+#endif

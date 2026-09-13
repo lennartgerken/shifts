@@ -39,15 +39,17 @@ struct Example_AppApp: App {
       fatalError("Failed to create model container: \(error)")
     }
 
-    if isUITesting {
-      do {
-        try TestingSupport.reset(modelContainer: modelContainer)
-      } catch {
-        fatalError("Failed to insert test data into model container: \(error)")
-      }
+    #if DEBUG
+      if isUITesting {
+        do {
+          try TestingSupport.reset(modelContainer: modelContainer)
+        } catch {
+          fatalError("Failed to insert test data into model container: \(error)")
+        }
 
-      TestingSupport.configureSettings(settings: settings)
-    }
+        TestingSupport.configureSettings(settings: settings)
+      }
+    #endif
   }
 
   var body: some Scene {
