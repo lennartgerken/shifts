@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		33049BC130571E61000C78B8 /* Shifts.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Shifts.xctestplan; sourceTree = "<group>"; };
 		3316ECE23043236600076FFE /* ShiftsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiftsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		33399C772FFCF0EE00CD1EFF /* Shifts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shifts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		333B9C52300D079400C0597D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -76,6 +77,7 @@
 		33399C6E2FFCF0EE00CD1EFF = {
 			isa = PBXGroup;
 			children = (
+				33049BC130571E61000C78B8 /* Shifts.xctestplan */,
 				33399C792FFCF0EE00CD1EFF /* Shifts */,
 				33860030303ABA1A00E485B7 /* ShiftsUITests */,
 				3316ECE33043236600076FFE /* ShiftsTests */,

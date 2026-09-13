@@ -27,11 +27,13 @@ struct TagsView: View {
   }
 }
 
-#Preview {
-  Form {
-    TagsView(
-      tags: .constant([])
-    )
-    .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    Form {
+      TagsView(
+        tags: .constant([])
+      )
+      .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif

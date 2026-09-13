@@ -65,9 +65,11 @@ struct ShiftReferenceEditListView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    ShiftReferenceEditListView()
-      .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      ShiftReferenceEditListView()
+        .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif

@@ -99,11 +99,13 @@ struct DayDetailsView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    DayDetailsView(
-      dateInterval: Calendar.current.dateInterval(of: .day, for: Date())!,
-      notificationService: NotificationService()
-    )
-  }.modelContainer(PreviewSupport.inMemoryContainer())
-}
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      DayDetailsView(
+        dateInterval: Calendar.current.dateInterval(of: .day, for: Date())!,
+        notificationService: NotificationService()
+      )
+    }.modelContainer(PreviewSupport.inMemoryContainer())
+  }
+#endif

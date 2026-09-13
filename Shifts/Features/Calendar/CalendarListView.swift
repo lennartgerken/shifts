@@ -161,22 +161,24 @@ private func getDates(from start: Date, to end: Date) -> [Date] {
   return days
 }
 
-#Preview {
-  let start = Calendar.current.date(
-    from: Calendar.current.dateComponents([.year, .month], from: Date())
-  )!
-  let end = Calendar.current.date(
-    byAdding: DateComponents(month: 1, day: -1),
-    to: start
-  )!
+#if DEBUG
+  #Preview {
+    let start = Calendar.current.date(
+      from: Calendar.current.dateComponents([.year, .month], from: Date())
+    )!
+    let end = Calendar.current.date(
+      byAdding: DateComponents(month: 1, day: -1),
+      to: start
+    )!
 
-  NavigationStack {
-    CalendarListView(
-      start: start,
-      end: end,
-      scrollRequest: .constant(ScrollRequest(to: Date())),
-      notificationService: NotificationService()
-    )
+    NavigationStack {
+      CalendarListView(
+        start: start,
+        end: end,
+        scrollRequest: .constant(ScrollRequest(to: Date())),
+        notificationService: NotificationService()
+      )
+    }
+    .modelContainer(PreviewSupport.inMemoryContainer())
   }
-  .modelContainer(PreviewSupport.inMemoryContainer())
-}
+#endif

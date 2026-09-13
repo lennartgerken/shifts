@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "id" : "FEBA46AA-1575-4B5F-8B02-F57ACD50C1C5",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "language" : "de",
+    "performanceAntipatternCheckerEnabled" : true,
+    "region" : "DE",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Shifts.xcodeproj",
+      "identifier" : "33399C762FFCF0EE00CD1EFF",
+      "name" : "Shifts"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Shifts.xcodeproj",
+        "identifier" : "3386002E303ABA1A00E485B7",
+        "name" : "ShiftsUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Shifts.xcodeproj",
+        "identifier" : "3316ECE13043236600076FFE",
+        "name" : "ShiftsTests"
+      }
+    }
+  ],
+  "version" : 1
+}
