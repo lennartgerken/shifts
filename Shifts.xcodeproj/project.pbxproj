@@ -31,6 +31,16 @@
 		3386002F303ABA1A00E485B7 /* ShiftsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiftsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		33F5A5973058232C000D26C3 /* Exceptions for "Shifts" folder in "Shifts" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 33399C762FFCF0EE00CD1EFF /* Shifts */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3316ECE33043236600076FFE /* ShiftsTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -39,6 +49,9 @@
 		};
 		33399C792FFCF0EE00CD1EFF /* Shifts */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				33F5A5973058232C000D26C3 /* Exceptions for "Shifts" folder in "Shifts" target */,
+			);
 			path = Shifts;
 			sourceTree = "<group>";
 		};
@@ -447,7 +460,9 @@
 				DEVELOPMENT_TEAM = 5WMA4B7JJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shifts/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShiftPile;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -485,7 +500,9 @@
 				DEVELOPMENT_TEAM = 5WMA4B7JJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shifts/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShiftPile;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
