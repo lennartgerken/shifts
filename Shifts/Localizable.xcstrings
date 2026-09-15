@@ -1030,7 +1030,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(days)lld Tag(en)."
+            "value" : "Deine Schicht beginnt in %(days)lld Tag(en)."
           }
         },
         "en" : {
@@ -1047,7 +1047,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(hours)lld Stunde(n)."
+            "value" : "Deine Schicht beginnt in %(hours)lld Stunde(n)."
           }
         },
         "en" : {
@@ -1064,7 +1064,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(minutes)lld Minute(n)."
+            "value" : "Deine Schicht beginnt in %(minutes)lld Minute(n)."
           }
         },
         "en" : {

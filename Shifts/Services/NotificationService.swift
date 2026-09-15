@@ -121,7 +121,15 @@ struct NotificationService: NotificationServicing {
         content.title = String(
           localized: .notificationsTitleShiftReminder
         )
+
+        if let notes = shift.notes, !notes.isEmpty {
+          message.append("\n\(notes)")
+        }
+        if !shift.tags.isEmpty {
+          message.append("\n\(shift.tags.map(\.name).sorted().joined(separator: ", "))")
+        }
         content.body = message
+
         content.sound = .default
 
         let dateComponents = calendar.dateComponents(
