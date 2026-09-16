@@ -429,6 +429,23 @@
         }
       }
     },
+    "buttonClose" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
     "daysBeforeShift" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -442,6 +459,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$(days)lld day(s) before the shift"
+          }
+        }
+      }
+    },
+    "description.enableNotifications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte aktiviere die Benachrichtigungen in den iOS-Einstellungen, um diese Funktion zu verwenden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enable the notifications in the iOS settings to use this feature."
           }
         }
       }
@@ -1632,6 +1666,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit tags"
+          }
+        }
+      }
+    },
+    "title.enableNotifications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
           }
         }
       }
