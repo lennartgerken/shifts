@@ -133,7 +133,7 @@ struct SettingsView: View {
     )
     .sheet(isPresented: $showAddNotification) {
       NavigationStack {
-        NotificationTimingsList(
+        NotificationTimingsListView(
           notificationTimings: $settings.notificationTimings
         )
       }
@@ -190,10 +190,10 @@ struct SettingsView: View {
             try await scheduleUpcomingShifts()
           default:
             settings.sendNotifications = false
+            showNotificationAlert = true
           }
         } catch {
           print(error)
-          showNotificationAlert = true
         }
       }
     } else {
