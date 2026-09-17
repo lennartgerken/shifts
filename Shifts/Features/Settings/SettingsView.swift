@@ -168,23 +168,26 @@ struct SettingsView: View {
   private func updateNotifications(enabled: Bool) {
     if enabled {
       Task {
-        let status =
-          await notificationService.authorizationStatus()
-
-        switch status {
-        case .notDetermined:
-          let granted =
-            try await notificationService
-            .requestAuthorization()
-          if granted {
+        do {
+          let status =
+            await notificationService.authorizationStatus()
+          switch status {
+          case .notDetermined:
+            let granted =
+              try await notificationService
+              .requestAuthorization()
+            if granted {
+              try await scheduleUpcomingShifts()
+            } else {
+              settings.sendNotifications = false
+            }
+          case .authorized:
             try await scheduleUpcomingShifts()
-          } else {
+          default:
             settings.sendNotifications = false
           }
-        case .authorized:
-          try await scheduleUpcomingShifts()
-        default:
-          settings.sendNotifications = false
+        } catch {
+          print(error)
         }
       }
     } else {
