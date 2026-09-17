@@ -6,7 +6,7 @@ on:
 
 jobs:
   verify-pr:
-    runs-on: macos-26
+    runs-on: xcode-27
 
     steps:
       - name: Checkout repository
@@ -21,4 +21,4 @@ jobs:
             -project Shifts.xcodeproj \
             -scheme Shifts \
             -parallel-testing-enabled NO \
-            -destination 'platform=iOS Simulator,name=iPhone 17'
+            -destination 'platform=iOS Simulator,arch=arm64,name=iPhone 17'

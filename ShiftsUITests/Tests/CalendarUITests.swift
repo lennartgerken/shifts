@@ -10,13 +10,12 @@ final class CalendarUITests: BaseUITests {
   }
 
   func testShowCalendarRow() throws {
-    let day = 1
-    let date = getDayOfMonth(day: day)
+    let date = getDayOfMonth(day: 1)
     let dayRow = calendarScreen.dayRow(for: date)
 
     calendarScreen.selectDate(date)
 
-    XCTAssertEqual(dayRow.dayImage.label, "\(day).calendar")
+    XCTAssertEqual(dayRow.dayImage.label, "Zahl Eins Auf Einer Kalenderseite")
     XCTAssertEqual(
       dayRow.weekdayText.label,
       date.formatted(.dateTime.weekday(.wide))

@@ -17,6 +17,8 @@
   },
   "groups" : [
     {
+      "blur-material" : null,
+      "hidden" : false,
       "layers" : [
         {
           "blend-mode" : "normal",
@@ -25,7 +27,7 @@
           "hidden" : false,
           "image-name" : "icon.svg",
           "name" : "icon",
-          "opacity" : 0.95,
+          "opacity" : 1,
           "position" : {
             "scale" : 0.85,
             "translation-in-points" : [
@@ -35,12 +37,19 @@
           }
         }
       ],
+      "lighting" : "individual",
+      "refractivity" : {
+        "depth" : 0,
+        "enabled" : false,
+        "strength" : 0.5
+      },
       "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.5
       }
     }
