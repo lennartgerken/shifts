@@ -21,4 +21,4 @@ jobs:
             -project Shifts.xcodeproj \
             -scheme Shifts \
             -parallel-testing-enabled NO \
-            -destination 'platform=iOS Simulator,arch=arm64,name=iPhone 18'
+            -destination 'platform=iOS Simulator,arch=arm64,name=iPhone 17'
