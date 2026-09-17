@@ -1,16 +1,19 @@
 import SwiftUI
 
-struct NotificationTimingsList: View {
+struct NotificationTimingsListView: View {
   @Binding var notificationTimings: Set<NotificationTiming>
 
   @Environment(\.dismiss) private var dismiss
   @State private var showAddView = false
+  private var notificationTimingsArray: [NotificationTiming] {
+    Array(notificationTimings).sorted()
+  }
 
   var body: some View {
     Group {
       if !notificationTimings.isEmpty {
         List {
-          ForEach(Array(notificationTimings)) { notificationTiming in
+          ForEach(notificationTimingsArray) { notificationTiming in
             Group {
               switch notificationTiming.timing {
               case .minute:
@@ -34,11 +37,11 @@ struct NotificationTimingsList: View {
             .accessibilityIdentifier("notificationTimingsList.timingRow-\(notificationTiming.id)")
           }
           .onDelete { indexSet in
-            var tempTimings = Array(notificationTimings)
+            let tempNotificationTimings = notificationTimingsArray
             for index in indexSet {
-              tempTimings.remove(at: index)
+              let toRemove = tempNotificationTimings[index]
+              notificationTimings.remove(toRemove)
             }
-            notificationTimings = Set(tempTimings)
           }
         }
       } else {
@@ -82,7 +85,7 @@ struct NotificationTimingsList: View {
 
 #Preview {
   NavigationStack {
-    NotificationTimingsList(
+    NotificationTimingsListView(
       notificationTimings: .constant([
         NotificationTiming(value: 1, timing: .day)
       ]
@@ -93,7 +96,7 @@ struct NotificationTimingsList: View {
 
 #Preview {
   NavigationStack {
-    NotificationTimingsList(
+    NotificationTimingsListView(
       notificationTimings: .constant([])
     )
   }

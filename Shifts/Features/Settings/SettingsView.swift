@@ -12,6 +12,7 @@ struct SettingsView: View {
   @State private var showEditTags = false
   @State private var showEditShiftReferences = false
   @State private var showAddNotification = false
+  @State private var showNotificationAlert = false
 
   @State private var newNotificationValue = 1
 
@@ -92,6 +93,11 @@ struct SettingsView: View {
         .onChange(of: settings.sendNotifications) { _, newValue in
           updateNotifications(enabled: newValue)
         }
+        .alert(.titleEnableNotifications, isPresented: $showNotificationAlert) {
+          Button(.buttonClose) {}
+        } message: {
+          Text(.descriptionEnableNotifications)
+        }
         .accessibilityIdentifier("settings.notificationsToggle")
         if settings.sendNotifications {
           Button(.buttonEditReminders, systemImage: "bell") {
@@ -100,7 +106,6 @@ struct SettingsView: View {
           .accessibilityIdentifier("settings.editRemindersButton")
         }
       }
-
     }
     .sheet(
       isPresented: $showImportInfo,
@@ -128,7 +133,7 @@ struct SettingsView: View {
     )
     .sheet(isPresented: $showAddNotification) {
       NavigationStack {
-        NotificationTimingsList(
+        NotificationTimingsListView(
           notificationTimings: $settings.notificationTimings
         )
       }
@@ -185,6 +190,7 @@ struct SettingsView: View {
             try await scheduleUpcomingShifts()
           default:
             settings.sendNotifications = false
+            showNotificationAlert = true
           }
         } catch {
           print(error)

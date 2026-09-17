@@ -429,6 +429,23 @@
         }
       }
     },
+    "buttonClose" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
     "daysBeforeShift" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -442,6 +459,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$(days)lld day(s) before the shift"
+          }
+        }
+      }
+    },
+    "description.enableNotifications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte aktiviere die Benachrichtigungen in den iOS-Einstellungen, um diese Funktion zu verwenden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enable the notifications in the iOS settings to use this feature."
           }
         }
       }
@@ -1030,7 +1064,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(days)lld Tag(en)."
+            "value" : "Deine Schicht beginnt in %(days)lld Tag(en)."
           }
         },
         "en" : {
@@ -1047,7 +1081,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(hours)lld Stunde(n)."
+            "value" : "Deine Schicht beginnt in %(hours)lld Stunde(n)."
           }
         },
         "en" : {
@@ -1064,7 +1098,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deine Schicht starten in %(minutes)lld Minute(n)."
+            "value" : "Deine Schicht beginnt in %(minutes)lld Minute(n)."
           }
         },
         "en" : {
@@ -1632,6 +1666,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit tags"
+          }
+        }
+      }
+    },
+    "title.enableNotifications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
           }
         }
       }

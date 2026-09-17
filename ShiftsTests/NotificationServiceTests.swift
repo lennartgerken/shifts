@@ -86,6 +86,13 @@ struct NotificationServiceTests {
   }
 
   @Test func scheduleNotifications() async throws {
+    let notes = "Notizen zu meiner Schicht."
+    let tags = [
+      try! Tag(name: "Tag 1", colorRed: 1, colorBlue: 0, colorGreen: 0),
+      try! Tag(name: "Tag 2", colorRed: 0, colorBlue: 1, colorGreen: 0),
+    ]
+    try! shift1.updateValues(start: shift1.start, end: shift1.end, notes: notes, tags: tags)
+
     let notificationTimings: Set<NotificationTiming> = [
       NotificationTiming(value: 1, timing: .day),
       NotificationTiming(value: 2, timing: .hour),
@@ -103,13 +110,16 @@ struct NotificationServiceTests {
 
     for notificationTiming in notificationTimings {
       var minutes = notificationTiming.value
+      var messageModifier = "Minute(n)"
       switch notificationTiming.timing {
       case .minute:
         break
       case .hour:
         minutes *= 60
+        messageModifier = "Stunde(n)"
       case .day:
         minutes = minutes * 24 * 60
+        messageModifier = "Tag(en)"
       }
 
       let dateFromTiming = calendar.date(
@@ -117,16 +127,20 @@ struct NotificationServiceTests {
         to: shift1.start
       )
 
+      let pendingNotification = pendingNotifications.first(where: { pendingNotifications in
+        let trigger =
+          pendingNotifications.trigger!
+          as! UNCalendarNotificationTrigger
+        let dateFromTrigger = calendar.date(
+          from: trigger.dateComponents
+        )
+        return dateFromTiming == dateFromTrigger
+      })
+
+      #expect(pendingNotification?.content.title == "Schicht-Erinnerung")
       #expect(
-        pendingNotifications.first(where: { pendingNotifications in
-          let trigger =
-            pendingNotifications.trigger!
-            as! UNCalendarNotificationTrigger
-          let dateFromTrigger = calendar.date(
-            from: trigger.dateComponents
-          )
-          return dateFromTiming == dateFromTrigger
-        }) != nil
+        pendingNotification?.content.body
+          == "Deine Schicht beginnt in \(notificationTiming.value) \(messageModifier).\n\(notes)\n\(tags.map(\.name).joined(separator: ", "))"
       )
     }
   }

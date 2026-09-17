@@ -7,7 +7,33 @@ enum NotificationTimingType: Encodable, Decodable {
   case day
 }
 
-struct NotificationTiming: Identifiable, Hashable, Encodable, Decodable {
+struct NotificationTiming: Identifiable, Hashable, Encodable, Decodable, Comparable {
+  static func < (lhs: borrowing NotificationTiming, rhs: borrowing NotificationTiming) -> Bool {
+    switch lhs.timing {
+    case .minute:
+      if rhs.timing != .minute { return true }
+    case .hour:
+      switch rhs.timing {
+      case .minute:
+        return false
+      case .hour:
+        break
+      case .day:
+        return true
+      }
+    case .day:
+      switch rhs.timing {
+      case .minute:
+        return false
+      case .hour:
+        return false
+      case .day:
+        break
+      }
+    }
+    return lhs.value < rhs.value
+  }
+
   var id: String {
     "\(value)-\(timing)"
   }
@@ -121,7 +147,15 @@ struct NotificationService: NotificationServicing {
         content.title = String(
           localized: .notificationsTitleShiftReminder
         )
+
+        if let notes = shift.notes, !notes.isEmpty {
+          message.append("\n\(notes)")
+        }
+        if !shift.tags.isEmpty {
+          message.append("\n\(shift.tags.map(\.name).sorted().joined(separator: ", "))")
+        }
         content.body = message
+
         content.sound = .default
 
         let dateComponents = calendar.dateComponents(
