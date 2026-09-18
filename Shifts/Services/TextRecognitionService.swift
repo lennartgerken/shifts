@@ -1,3 +1,4 @@
+import CoreImage
 import Foundation
 import Vision
 
@@ -11,9 +12,32 @@ protocol TextRecognitionServicing {
 }
 
 struct TextRecognitionService: TextRecognitionServicing {
-  func recognize(from image: CGImage) async throws -> String {
-    let request = RecognizeTextRequest()
+  private func correctImage(_ image: CGImage) async throws -> CIImage {
+    var request = RecognizeTextRequest()
+    request.recognitionLevel = .accurate
+
     let observations = try await request.perform(on: image)
+    var totalAngle = 0.0
+    var count = 0
+    for observation in observations {
+      if observation.boundingBox.width < 0.15 {
+        continue
+      }
+      let topLeft = observation.topLeft
+      let topRight = observation.topRight
+      totalAngle += atan2(topRight.y - topLeft.y, topRight.x - topLeft.x)
+      count += 1
+    }
+    let averageAngle = totalAngle / Double(count)
+    let ciImage = CIImage(cgImage: image).transformed(
+      by: CGAffineTransform(rotationAngle: -averageAngle))
+    return ciImage
+  }
+
+  func recognize(from image: CGImage) async throws -> String {
+    var request = RecognizeTextRequest()
+    request.recognitionLevel = .accurate
+    let observations = try await request.perform(on: try await correctImage(image))
 
     let textBlocks: [RecognizedTextBlock] = observations.compactMap {
       observation -> RecognizedTextBlock? in
