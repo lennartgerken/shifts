@@ -114,6 +114,11 @@ struct CalendarListView: View {
               } label: {
                 DayRowView(day: day)
               }
+              .listRowBackground(
+                Color(
+                  calendar.startOfDay(for: day.dateInterval.start)
+                    < calendar.startOfDay(for: Date()) ? .systemGray5 : .systemBackground)
+              )
               .accessibilityIdentifier(
                 "calendarList.dayRow-\(day.id.formatted(.iso8601.year().month().day()))"
               )
