@@ -9,15 +9,25 @@ struct ShiftDetailsView: View {
   @Environment(\.dismiss) private var dismiss
   @State private var showEditShift = false
 
+  private let format: Date.FormatStyle
+
+  init(shift: Shift, notificationService: NotificationServicing) {
+    self.shift = shift
+    self.notificationService = notificationService
+    self.format =
+      Calendar.current.isDate(shift.start, inSameDayAs: shift.end)
+      ? .dateTime.hour().minute() : .dateTime.day().month().year().hour().minute()
+  }
+
   var body: some View {
     Form {
       Section(.titleShift) {
         LabeledContent(.labelStart) {
-          Text(shift.start, format: .dateTime.hour().minute())
+          Text(shift.start, format: format)
             .accessibilityIdentifier("shiftDetails.startTextField")
         }
         LabeledContent(.labelEnd) {
-          Text(shift.end, format: .dateTime.hour().minute())
+          Text(shift.end, format: format)
             .accessibilityIdentifier("shiftDetails.endTextField")
         }
       }

@@ -28,7 +28,7 @@ struct DayRowView: View {
           }
         }
       }
-      VStack(alignment: .leading) {
+      VStack(alignment: .leading, spacing: 5) {
         HStack {
           Text(
             day.dateInterval.start,
@@ -54,9 +54,7 @@ struct DayRowView: View {
             }
           }
         }
-        if !day.shifts.isEmpty {
-          ActiveHoursView(day: day)
-        }
+        ActiveHoursView(day: day)
       }
     }
     .frame(maxWidth: .infinity, alignment: .leading)

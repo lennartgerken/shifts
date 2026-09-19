@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct ActiveHoursView: View {
+  private let calendar = Calendar.current
   private let day: Day
   private let activeHours: Set<Int>
 
   init(day: Day) {
     self.day = day
-    let calendar = Calendar.current
     var activeHours: Set<Int> = []
     for shift in day.shifts {
       let startHour =
@@ -24,22 +24,23 @@ struct ActiveHoursView: View {
   }
 
   var body: some View {
-    HStack(spacing: 5) {
+    HStack(spacing: 0) {
+      let currentHour = calendar.component(.hour, from: Date())
+      let isToday = calendar.isDateInToday(day.dateInterval.start)
       ForEach(0..<24) { hour in
         let isActive = activeHours.contains(hour)
-        ZStack {
-          Image(
-            systemName: isActive ? "circle.fill" : "circle"
-          )
-          .resizable()
-          .scaledToFit()
-          .frame(maxWidth: 10, maxHeight: 10)
-          .accessibilityIdentifier("activeHours.image-\(isActive ? "active" : "inactive")")
-        }
+        Image(
+          systemName: isActive ? "circle.fill" : "circle"
+        )
+        .font(.system(size: 8))
+        .frame(width: 8, height: 8)
+        .scaleEffect((isToday && hour == currentHour) ? 1.3 : 1)
+        .foregroundStyle((isToday && hour == currentHour) ? .red : .primary)
+        .accessibilityIdentifier("activeHours.image-\(isActive ? "active" : "inactive")")
         .frame(maxWidth: .infinity)
-
       }
     }
+    .frame(maxWidth: 450)
   }
 }
 
