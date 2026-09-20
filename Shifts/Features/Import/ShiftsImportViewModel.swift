@@ -5,6 +5,12 @@ import SwiftData
 import SwiftUI
 import Vision
 
+enum ShiftsImportViewOverwriteShifts {
+  case noOverwrite
+  case byTimespan
+  case byStartDay
+}
+
 @Observable
 final class ShiftsImportViewModel {
   private let calendar = Calendar.current
@@ -37,6 +43,10 @@ final class ShiftsImportViewModel {
   }
   var errorMessage: String?
 
+  var overwriteShifts: ShiftsImportViewOverwriteShifts = .byTimespan
+  var overwriteShiftsTimespanStart: Date = Date()
+  var overwriteShiftsTimespanEnd: Date = Date()
+
   init(shiftsImportService: ShiftsImportServicing, notificationService: NotificationServicing) {
     self.shiftsImportService = shiftsImportService
     self.notificationService = notificationService
@@ -64,6 +74,13 @@ final class ShiftsImportViewModel {
       return
     }
 
+    if let firstShift = parsedShifts.sorted(by: { shift1, shift2 in
+      shift1.start < shift2.start
+    }).first {
+      let interval = calendar.dateInterval(of: .month, for: firstShift.start)!
+      overwriteShiftsTimespanStart = interval.start
+      overwriteShiftsTimespanEnd = calendar.date(byAdding: .minute, value: -1, to: interval.end)!
+    }
     importedShifts = parsedShifts
   }
 
@@ -86,10 +103,27 @@ final class ShiftsImportViewModel {
   func saveShifts(modelContext: ModelContext, settings: AppSettings) {
     Task {
       do {
+        var overwriteToSet: OverwriteShifts = .noOverwrite
+        switch overwriteShifts {
+        case .noOverwrite:
+          break
+        case .byTimespan:
+          overwriteToSet = .byTimespan(
+            from: calendar.startOfDay(for: overwriteShiftsTimespanStart),
+            to: calendar.date(
+              byAdding: DateComponents(day: 1, minute: -1),
+              to: calendar.date(
+                from: calendar.dateComponents(
+                  [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!)
+        case .byStartDay:
+          overwriteToSet = .byStartDay
+        }
+
         guard let importedShifts else { return }
         let shiftImportResults = try await shiftsImportService.finalize(
           modelContext: modelContext,
-          shifts: importedShifts
+          shifts: importedShifts,
+          overwriteShifts: overwriteToSet
         )
         for shift in shiftImportResults.deletedShifts {
           notificationService.remove(for: shift)
