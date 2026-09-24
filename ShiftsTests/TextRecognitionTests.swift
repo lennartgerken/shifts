@@ -22,11 +22,7 @@ struct TextRecognitionTests {
 
     let textRecognitionService = await TextRecognitionService()
 
-    let url = Bundle.main.url(forResource: "schedule", withExtension: "png")!
-    let data = try Data(Data(contentsOf: url))
-    let source = try #require(CGImageSourceCreateWithData(data as CFData, nil))
-    let cgImage = try #require(CGImageSourceCreateImageAtIndex(source, 0, nil))
-
+    let cgImage = try getCGImage(fromResource: "schedule", withExtension: "png")
     let document = try await textRecognitionService.recognize(from: cgImage)
     #expect(document == expectedDocument)
   }

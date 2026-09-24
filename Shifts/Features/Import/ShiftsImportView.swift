@@ -6,10 +6,10 @@ import Vision
 struct ShiftsImportView: View {
   @State private var selectedImage: PhotosPickerItem?
   @State private var viewModel: ShiftsImportViewModel
+
   @Environment(\.modelContext) private var modelContext
   @Environment(\.dismiss) private var dismiss
   @Environment(AppSettings.self) private var settings
-
   @Environment(\.isUITesting) private var isUITesting
 
   init(
@@ -27,22 +27,50 @@ struct ShiftsImportView: View {
       if let importedDays = viewModel.importedDays {
         if !importedDays.isEmpty {
           List {
-            ForEach(importedDays) { day in
-              DayRowView(day: day, style: .fullDate)
-                .accessibilityIdentifier(
-                  "shiftsImport.dayRow-\(day.id.formatted(.iso8601.year().month().day()))")
+            Section {
+              Picker(.labelOverwriteShifts, selection: $viewModel.overwriteShifts) {
+                Text(.pickerValueImportOverwriteNoOverwrite).tag(
+                  ShiftsImportViewOverwriteShifts.noOverwrite)
+                Text(.pickerValueImportOverwriteByTimespan).tag(
+                  ShiftsImportViewOverwriteShifts.byTimespan)
+                Text(.pickerValueImportOverwriteByNewShifts).tag(
+                  ShiftsImportViewOverwriteShifts.byStartDay)
+              }
+              if viewModel.overwriteShifts == .byTimespan {
+                DatePicker(
+                  .labelFrom,
+                  selection: $viewModel.overwriteShiftsTimespanStart,
+                  displayedComponents: [.date]
+                )
+                DatePicker(
+                  .labelTo,
+                  selection: $viewModel.overwriteShiftsTimespanEnd,
+                  displayedComponents: [.date]
+                )
+              }
+            }
+            Section {
+              ForEach(importedDays) { day in
+                DayRowView(day: day, style: .fullDate)
+                  .accessibilityIdentifier(
+                    "shiftsImport.dayRow-\(day.id.formatted(.iso8601.year().month().day()))"
+                  )
+              }
             }
           }
         } else {
           ContentUnavailableView(
-            .titleNoShifts, systemImage: "calendar", description: Text(.errorParseShiftsFailed))
+            .titleNoShifts,
+            systemImage: "calendar",
+            description: Text(.errorParseShiftsFailed)
+          )
         }
       } else {
         VStack(alignment: .leading, spacing: 20) {
           Text(.descriptionImport)
           if let importedSettingsValidated = try? ImportSettingsValidated(
-            settings: settings.importSettings)
-          {
+            settings: settings.importSettings
+          ) {
             if let errorMessage = viewModel.errorMessage {
               Text(errorMessage)
             } else {
@@ -54,11 +82,20 @@ struct ShiftsImportView: View {
                 } else {
                   Group {
                     if isUITesting {
-                      Button(.buttonImportSelectImage, systemImage: "photo.badge.magnifyingglass") {
-                        let url = Bundle.main.url(forResource: "schedule", withExtension: "png")!
+                      Button(
+                        .buttonImportSelectImage,
+                        systemImage: "photo.badge.magnifyingglass"
+                      ) {
+                        let url = Bundle.main.url(
+                          forResource: "schedule",
+                          withExtension: "png"
+                        )!
                         let data = try! Data(Data(contentsOf: url))
                         Task {
-                          await viewModel.importImage(data, settings: importedSettingsValidated)
+                          await viewModel.importImage(
+                            data,
+                            settings: importedSettingsValidated
+                          )
                         }
                       }
                       .accessibilityIdentifier("shiftsImport.selectImageButton")
@@ -76,14 +113,20 @@ struct ShiftsImportView: View {
                         Task {
                           guard let selectedImage else { return }
                           await viewModel.importImage(
-                            selectedImage, settings: importedSettingsValidated)
+                            selectedImage,
+                            settings: importedSettingsValidated
+                          )
                         }
                       }
                     }
                   }
                 }
               }
-              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+              .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .center
+              )
             }
           } else {
             Text(.errorImportConfigMissing)

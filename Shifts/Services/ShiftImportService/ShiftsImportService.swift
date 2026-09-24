@@ -2,11 +2,18 @@ import Foundation
 import SwiftData
 import Vision
 
+enum OverwriteShifts {
+  case noOverwrite
+  case byTimespan(from: Date, to: Date)
+  case byStartDay
+}
+
 protocol ShiftsImportServicing {
   func importShifts(from image: CGImage, importSettings: ImportSettingsValidated) async throws
     -> [ParsedShift]
 
-  func finalize(modelContext: ModelContext, shifts: [ParsedShift]) async throws -> ShiftImportResult
+  func finalize(modelContext: ModelContext, shifts: [ParsedShift], overwriteShifts: OverwriteShifts)
+    async throws -> ShiftImportResult
 }
 
 struct ShiftImportResult {
@@ -39,21 +46,37 @@ struct ShiftsImportService: ShiftsImportServicing {
   }
 
   @MainActor
-  func finalize(modelContext: ModelContext, shifts parsedShifts: [ParsedShift]) async throws
+  func finalize(
+    modelContext: ModelContext, shifts parsedShifts: [ParsedShift], overwriteShifts: OverwriteShifts
+  ) async throws
     -> ShiftImportResult
   {
     let calendar = Calendar.current
 
     var deletedShifts: [Shift] = []
-    for parsedShift in parsedShifts {
-      let startOfStartDate = calendar.startOfDay(for: parsedShift.start)
-      let endOfStartDate = calendar.date(
-        byAdding: DateComponents(day: 1, minute: -1),
-        to: startOfStartDate
-      )!
+    var newShifts: [Shift] = []
+
+    if case .byStartDay = overwriteShifts {
+      for parsedShift in parsedShifts {
+        let startOfStartDate = calendar.startOfDay(for: parsedShift.start)
+        let endOfStartDate = calendar.date(
+          byAdding: DateComponents(day: 1, minute: -1),
+          to: startOfStartDate
+        )!
+        let descriptor = FetchDescriptor<Shift>(
+          predicate: #Predicate { shift in
+            shift.start >= startOfStartDate && shift.start <= endOfStartDate
+          }
+        )
+        for shift in try modelContext.fetch(descriptor) {
+          modelContext.delete(shift)
+          deletedShifts.append(shift)
+        }
+      }
+    } else if case .byTimespan(let from, let to) = overwriteShifts {
       let descriptor = FetchDescriptor<Shift>(
         predicate: #Predicate { shift in
-          shift.start >= startOfStartDate && shift.start <= endOfStartDate
+          shift.start > from && shift.start <= to
         }
       )
       for shift in try modelContext.fetch(descriptor) {
@@ -62,7 +85,6 @@ struct ShiftsImportService: ShiftsImportServicing {
       }
     }
 
-    var newShifts: [Shift] = []
     for parsedShift in parsedShifts {
       if let shift = try? Shift(start: parsedShift.start, end: parsedShift.end) {
         modelContext.insert(shift)
