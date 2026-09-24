@@ -1398,40 +1398,6 @@
         }
       }
     },
-    "pickerValue.byNewShifts" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pro neuer Schicht"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "By new shifts"
-          }
-        }
-      }
-    },
-    "pickerValue.byTimespan" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitspanne"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "By timespan"
-          }
-        }
-      }
-    },
     "pickerValue.days" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1466,6 +1432,57 @@
         }
       }
     },
+    "pickerValue.importOverwrite.byNewShifts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An Tagen der neuen Schichten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By start of new shifts"
+          }
+        }
+      }
+    },
+    "pickerValue.importOverwrite.byTimespan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitspanne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By timespan"
+          }
+        }
+      }
+    },
+    "pickerValue.importOverwrite.noOverwrite" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht überschreiben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No overwrite"
+          }
+        }
+      }
+    },
     "pickerValue.minutes" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1479,23 +1496,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Minute(s)"
-          }
-        }
-      }
-    },
-    "pickerValue.noOverwrite" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht überschreiben"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No overwrite"
           }
         }
       }
@@ -1591,7 +1591,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese Einstellungen werden benötigt, um den Import von Schichten aus Fotos von Schichtplänen zu ermöglichen. Es wird festgelegt, wie die Schichten in dem Plan erkannt werden können.\n\\\n\\\n**%1$(labelDateIdentification)@**\n\\\n\\\nWie kann das Datum der einzelnen Schichten festgestellt werden? Entweder enthält jede Zeile des Plans das vollständige Datum oder das Datum ist separat aufgeführt. Bei einem separaten Datum muss jede Zeile nur die Nummer des Tages beinhalten. Der Monat und das Jahr werden aus einer separaten Angabe gelesen.\n\\\n\\\n**%2$(patternShiftEntry)@**\n\\\n\\\nWie kann eine Schicht identifiziert werden? Aus Mustersegmenten muss hier ein Schichteintrag abgebildet werden. Angenommen ein Schichteintrag ist im Plan wie folgt angegeben:\n\\\n\\\n01      Schicht      10:00       15:00\n\\\n\\\nDann kann der Eintrag über folgendes Muster identifiziert werden:\n\\\n\\\n%3$(patternShiftEntryExample)@\n\\\n\\\n**%4$(patternDate)@**\n\\\n\\\nWie können der Monat und das Jahr des Schichtplans identifiziert werden? Sofern jede Schichtzeile nur den Tag beinhaltet (wie im Beispiel oben), müssen der Monat und das Jahr aus einer separaten Angabe ausgelesen werden. Angenommen das Datum des Plans ist wie folgt angegeben:\n\\\n\\\nvon: 01.01.2026 bis: 31.01.2026\n\\\n\\\nDann kann können Monat und Jahr über folgendes Muster identifiziert werden:\n\\\n\\\n%5$(patternDateExample)@"
+            "value" : "Diese Einstellungen werden benötigt, um den Import von Schichten aus Fotos von Schichtplänen zu ermöglichen. Es wird festgelegt, wie die Schichten in dem Plan erkannt werden können.\n\\\n\\\n**%1$(labelDateIdentification)@**\n\\\n\\\nWie kann das Datum der einzelnen Schichten festgestellt werden? Entweder enthält jede Zeile des Plans das vollständige Datum oder das Datum ist separat aufgeführt. Bei einem separaten Datum muss jede Zeile nur die Nummer des Tages beinhalten. Der Monat und das Jahr werden aus einer separaten Angabe gelesen.\n\\\n\\\n**%2$(patternShiftEntry)@**\n\\\n\\\nWie kann eine Schicht identifiziert werden? Aus Mustersegmenten muss hier ein Schichteintrag abgebildet werden. Angenommen ein Schichteintrag ist im Plan wie folgt angegeben:\n\\\n\\\n01      Schicht      10:00       15:00\n\\\n\\\nDann kann der Eintrag über folgendes Muster identifiziert werden:\n\\\n\\\n%3$(patternShiftEntryExample)@\n\\\n\\\n**%4$(patternDate)@**\n\\\n\\\nWie können der Monat und das Jahr des Schichtplans identifiziert werden? Sofern jede Schichtzeile nur den Tag beinhaltet (wie im Beispiel oben), müssen der Monat und das Jahr aus einer separaten Angabe ausgelesen werden. Angenommen das Datum des Plans ist wie folgt angegeben:\n\\\n\\\nvon: 01.01.2026 bis: 31.01.2026\n\\\n\\\nDann können Monat und Jahr über folgendes Muster identifiziert werden:\n\\\n\\\n%5$(patternDateExample)@"
           }
         },
         "en" : {

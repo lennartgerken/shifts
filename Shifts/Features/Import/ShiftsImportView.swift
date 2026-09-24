@@ -29,9 +29,12 @@ struct ShiftsImportView: View {
           List {
             Section {
               Picker(.labelOverwriteShifts, selection: $viewModel.overwriteShifts) {
-                Text(.pickerValueNoOverwrite).tag(ShiftsImportViewOverwriteShifts.noOverwrite)
-                Text(.pickerValueByTimespan).tag(ShiftsImportViewOverwriteShifts.byTimespan)
-                Text(.pickerValueByNewShifts).tag(ShiftsImportViewOverwriteShifts.byStartDay)
+                Text(.pickerValueImportOverwriteNoOverwrite).tag(
+                  ShiftsImportViewOverwriteShifts.noOverwrite)
+                Text(.pickerValueImportOverwriteByTimespan).tag(
+                  ShiftsImportViewOverwriteShifts.byTimespan)
+                Text(.pickerValueImportOverwriteByNewShifts).tag(
+                  ShiftsImportViewOverwriteShifts.byStartDay)
               }
               if viewModel.overwriteShifts == .byTimespan {
                 DatePicker(
