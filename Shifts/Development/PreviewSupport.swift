@@ -49,7 +49,7 @@ import SwiftUI
         )
       )
       context.insert(
-        try! Tag(name: "Tag 1", colorRed: 1, colorBlue: 0, colorGreen: 0)
+        try! Tag(name: "Tag 1", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0))
       )
       context.insert(ShiftReference(name: "Nachtschicht", shift: shift))
 

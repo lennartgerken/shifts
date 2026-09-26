@@ -64,15 +64,11 @@ import SwiftData
       let tags: [Tag] = [
         try Tag(
           name: "Tag 1",
-          colorRed: 1,
-          colorBlue: 0,
-          colorGreen: 0
+          colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)
         ),
         try Tag(
           name: "Tag 2",
-          colorRed: 1,
-          colorBlue: 0,
-          colorGreen: 0
+          colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)
         ),
       ]
 

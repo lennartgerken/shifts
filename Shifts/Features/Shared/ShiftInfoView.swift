@@ -15,7 +15,7 @@ struct ShiftInfoView: View {
       }
       ForEach(tags.prefix(3)) { tag in
         Image(systemName: "tag")
-          .foregroundStyle(tag.color)
+          .foregroundStyle(tag.colorRGB.color)
           .accessibilityIdentifier("shiftInfo.tagImage-\(tag.name)")
       }
       if shifts.first(where: { shift in
@@ -37,7 +37,7 @@ struct ShiftInfoView: View {
         from: DateComponents(year: 2023, month: 1, day: 1, hour: 10, minute: 30))!,
       end: calendar.date(from: DateComponents(year: 2023, month: 1, day: 1, hour: 11, minute: 30))!,
       notes: "Test",
-      tags: [try! Tag(name: "Tag 1", colorRed: 1, colorBlue: 0, colorGreen: 0)]
+      tags: [try! Tag(name: "Tag 1", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0))]
     )
   ])
 }

@@ -51,11 +51,13 @@ struct TagEditListView: View {
       NavigationStack {
         TagEditView(mode: .edit(tag: tag))
       }
+      .presentationDetents([.medium])
     }
     .sheet(isPresented: $showAddTag) {
       NavigationStack {
         TagEditView(mode: .add)
       }
+      .presentationDetents([.medium])
     }
   }
 }

@@ -1,12 +1,12 @@
 import SwiftData
 import SwiftUI
 
-enum TagEditMode {
+enum CategoryEditMode {
   case add
-  case edit(tag: Tag)
+  case edit(category: Category)
 }
 
-struct TagEditView: View {
+struct CategoryEditView: View {
   @State private var name: String = ""
   @State private var color: Color = .red
   @State private var error: String?
@@ -15,18 +15,18 @@ struct TagEditView: View {
   @Environment(\.modelContext) private var modelContext
   @Environment(\.self) private var environment
 
-  private let mode: TagEditMode
+  private let mode: CategoryEditMode
   private let title: String
 
-  init(mode: TagEditMode) {
+  init(mode: CategoryEditMode) {
     self.mode = mode
     switch mode {
     case .add:
-      title = String(localized: .titleAddTag)
-    case .edit(let tag):
-      title = String(localized: .titleEditTag)
-      self._name = State(initialValue: tag.name)
-      self._color = State(initialValue: tag.colorRGB.color)
+      title = String(localized: .titleAddCategory)
+    case .edit(let category):
+      title = String(localized: .titleEditCategory)
+      self._name = State(initialValue: category.name)
+      self._color = State(initialValue: category.colorRGB.color)
     }
   }
 
@@ -34,7 +34,7 @@ struct TagEditView: View {
     Form {
       Section {
         TextField(.labelName, text: $name)
-          .accessibilityIdentifier("tagEdit.nameTextField")
+          .accessibilityIdentifier("categoeyEdit.nameTextField")
         ColorPicker(.labelColor, selection: $color, supportsOpacity: false)
       } footer: {
         if let error {
@@ -56,7 +56,7 @@ struct TagEditView: View {
             dismiss()
           }
         }
-        .accessibilityIdentifier("tagEdit.saveButton")
+        .accessibilityIdentifier("categoeyEdit.saveButton")
       }
     }
   }
@@ -66,13 +66,13 @@ struct TagEditView: View {
       let resolvedColor = color.resolve(in: environment)
       if case .add = mode {
         try modelContext.insert(
-          Tag(
+          Category(
             name: name,
             colorRGB: try ColorRGB(
               red: Double(resolvedColor.red), green: Double(resolvedColor.green),
               blue: Double(resolvedColor.blue))))
-      } else if case .edit(let tag) = mode {
-        try tag.updateValues(
+      } else if case .edit(let category) = mode {
+        try category.updateValues(
           name: name,
           colorRGB: try ColorRGB(
             red: Double(resolvedColor.red), green: Double(resolvedColor.green),
@@ -80,7 +80,7 @@ struct TagEditView: View {
       }
 
       return true
-    } catch TagCreationError.emptyName {
+    } catch CategoryCreationError.emptyName {
       self.error = String(localized: .errorEmptyName)
     } catch ColorRGBError.invalidColor {
       self.error = String(localized: .errorInvalidColor)
@@ -93,13 +93,15 @@ struct TagEditView: View {
 
 #Preview("Add") {
   NavigationStack {
-    TagEditView(mode: .add)
+    CategoryEditView(mode: .add)
   }
 }
 
 #Preview("Edit") {
   NavigationStack {
-    TagEditView(
-      mode: .edit(tag: try! Tag(name: "Some tag", colorRGB: ColorRGB(red: 0, green: 1, blue: 1))))
+    CategoryEditView(
+      mode: .edit(
+        category: try! Category(
+          name: "Some category", colorRGB: ColorRGB(red: 0, green: 1, blue: 1))))
   }
 }

@@ -21,6 +21,23 @@
         }
       }
     },
+    "button.addCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add category"
+          }
+        }
+      }
+    },
     "button.addEntry" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -786,6 +803,23 @@
         }
       }
     },
+    "label.category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        }
+      }
+    },
     "label.color" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1415,6 +1449,23 @@
         }
       }
     },
+    "pickerValue.default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default"
+          }
+        }
+      }
+    },
     "pickerValue.hours" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1602,6 +1653,23 @@
         }
       }
     },
+    "title.addCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add category"
+          }
+        }
+      }
+    },
     "title.addPattern" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1670,6 +1738,23 @@
         }
       }
     },
+    "title.category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        }
+      }
+    },
     "title.deleteShiftReferences" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1683,6 +1768,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete references"
+          }
+        }
+      }
+    },
+    "title.editCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit category"
           }
         }
       }

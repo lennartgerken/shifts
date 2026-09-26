@@ -16,17 +16,21 @@ struct ShiftEditView: View {
   @Environment(\.modelContext) private var modelContext
   @Environment(\.dismiss) private var dismiss
   @Environment(AppSettings.self) private var settings
+  @Query() private var categories: [Category]
 
   @State private var sameDay = true
   @State private var day = Date()
   @State private var start = Date()
   @State private var end = Date()
+  @State private var category: Category?
   @State private var notes: String?
   @State private var tags: Set<Tag>
   @State private var useAsReference = false
   @State private var referenceName = ""
   @State private var datesError: String?
   @State private var successMessage: String?
+
+  @State private var showAddCategory = false
 
   init(mode: ShiftEditMode, notificationService: NotificationServicing) {
     self.mode = mode
@@ -57,6 +61,7 @@ struct ShiftEditView: View {
       _end = State(initialValue: shift.end)
       _notes = State(initialValue: shift.notes)
       _tags = State(initialValue: Set(shift.tags))
+      _category = State(initialValue: shift.category)
       if let shifReference = shift.shiftReference {
         _useAsReference = State(initialValue: true)
         _referenceName = State(initialValue: shifReference.name)
@@ -97,6 +102,17 @@ struct ShiftEditView: View {
           ErrorView(error: error)
         }
       }
+      Section(.titleCategory) {
+        Picker(.labelCategory, selection: $category) {
+          Text(.pickerValueDefault).tag(nil as Category?)
+          ForEach(categories) { category in
+            Text(category.name).tag(category)
+          }
+        }
+        Button(.buttonAddCategory) {
+          showAddCategory = true
+        }
+      }
       Section(.titleNotes) {
         TextField(
           .labelNotes,
@@ -121,6 +137,12 @@ struct ShiftEditView: View {
             .accessibilityIdentifier("shiftEdit.referenceNameTextField")
         }
       }
+    }
+    .sheet(isPresented: $showAddCategory) {
+      NavigationStack {
+        CategoryEditView(mode: .add)
+      }
+      .presentationDetents([.medium])
     }
     .scrollDismissesKeyboard(.interactively)
     .navigationTitle(title)
@@ -227,7 +249,8 @@ struct ShiftEditView: View {
           start: startToSet,
           end: endToSet,
           notes: notes,
-          tags: Array(tags)
+          tags: Array(tags),
+          category: category
         )
 
         if useAsReference {
@@ -253,7 +276,8 @@ struct ShiftEditView: View {
           start: startToSet,
           end: endToSet,
           notes: notes,
-          tags: Array(tags)
+          tags: Array(tags),
+          category: category
         )
 
         if useAsReference {

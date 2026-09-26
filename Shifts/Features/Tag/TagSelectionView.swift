@@ -53,6 +53,7 @@ struct TagSelectionView: View {
       NavigationStack {
         TagEditView(mode: .add)
       }
+      .presentationDetents([.medium])
     }
   }
 }
