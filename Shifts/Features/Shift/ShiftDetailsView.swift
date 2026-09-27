@@ -31,6 +31,13 @@ struct ShiftDetailsView: View {
             .accessibilityIdentifier("shiftDetails.endTextField")
         }
       }
+      if let category = shift.category {
+        Section {
+          LabeledContent(.labelCategory) {
+            Text(category.name)
+          }
+        }
+      }
       Section(.titleNotes) {
         Text(shift.notes ?? "")
           .accessibilityIdentifier("shiftDetails.notesTextField")
@@ -77,7 +84,9 @@ struct ShiftDetailsView: View {
         notes: """
           Test 1
           Test 2
-          """
+          """,
+        category: try! Category(
+          name: "Some category", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0))
       ),
       notificationService: NotificationService()
     )

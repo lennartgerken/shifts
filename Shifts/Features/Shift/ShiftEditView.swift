@@ -102,7 +102,7 @@ struct ShiftEditView: View {
           ErrorView(error: error)
         }
       }
-      Section(.titleCategory) {
+      Section {
         Picker(.labelCategory, selection: $category) {
           Text(.pickerValueDefault).tag(nil as Category?)
           ForEach(categories) { category in
@@ -129,7 +129,7 @@ struct ShiftEditView: View {
         .accessibilityIdentifier("shiftEdit.notesTextField")
       }
       TagsView(tags: $tags)
-      Section(.titleUseAsReference) {
+      Section {
         Toggle(.labelUseAsReference, isOn: $useAsReference)
           .accessibilityIdentifier("shiftEdit.useAsReferenceToggle")
         if useAsReference {
