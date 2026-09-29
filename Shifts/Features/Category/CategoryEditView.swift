@@ -44,6 +44,7 @@ struct CategoryEditView: View {
 
     }
     .navigationTitle(title)
+    .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .cancellationAction) {
         Button(.buttonCancel, systemImage: "xmark") {

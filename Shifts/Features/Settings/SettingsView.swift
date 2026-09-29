@@ -10,6 +10,7 @@ struct SettingsView: View {
 
   @State private var showImportInfo = false
   @State private var showEditTags = false
+  @State private var showEditCategories = false
   @State private var showEditShiftReferences = false
   @State private var showAddNotification = false
   @State private var showNotificationAlert = false
@@ -76,6 +77,11 @@ struct SettingsView: View {
         }
         .accessibilityIdentifier("settings.editTagsButton")
       }
+      Section(.titleCategories) {
+        Button(.buttonEditCategories, systemImage: "flag") {
+          showEditCategories = true
+        }
+      }
       Section(.titleShiftReferences) {
         Button(
           .buttonDeleteShiftReferences,
@@ -120,6 +126,14 @@ struct SettingsView: View {
       content: {
         NavigationStack {
           TagEditListView()
+        }
+      }
+    )
+    .sheet(
+      isPresented: $showEditCategories,
+      content: {
+        NavigationStack {
+          CategoryEditListView()
         }
       }
     )
@@ -209,4 +223,5 @@ struct SettingsView: View {
     SettingsView(notificationService: NotificationService())
   }
   .environment(settings)
+  .modelContainer(PreviewSupport.inMemoryContainer())
 }

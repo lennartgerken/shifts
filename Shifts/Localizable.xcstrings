@@ -208,6 +208,23 @@
         }
       }
     },
+    "button.editCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kategorien bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit categories"
+          }
+        }
+      }
+    },
     "button.editReminders" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -510,6 +527,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You can automatically create shifts by importing an image of a working schedule."
+          }
+        }
+      }
+    },
+    "description.noCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst eine neue Kategorie hinzufügen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can add a new category."
           }
         }
       }
@@ -1738,19 +1772,19 @@
         }
       }
     },
-    "title.category" : {
+    "title.categories" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kategorie"
+            "value" : "Kategorien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Category"
+            "value" : "Categories"
           }
         }
       }
@@ -1768,6 +1802,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete references"
+          }
+        }
+      }
+    },
+    "title.editCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien bearbeiten"
           }
         }
       }
@@ -1904,6 +1955,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import shifts"
+          }
+        }
+      }
+    },
+    "title.noCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Kategorien"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Categories"
           }
         }
       }

@@ -135,6 +135,13 @@ import SwiftData
 
       modelContext.insert(ShiftReference(name: "Reference 1", shift: shifts[0]))
 
+      modelContext.insert(
+        try Category(
+          name: "Category 1",
+          colorRGB: try ColorRGB(red: 0, green: 1, blue: 0)
+        )
+      )
+
       try modelContext.save()
     }
 
