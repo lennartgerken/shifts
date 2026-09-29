@@ -6,6 +6,7 @@ struct CategoryEditListView: View {
   @Environment(\.dismiss) private var dismiss
   @Query private var categories: [Category]
 
+  @State private var deleteCategory: Category?
   @State private var showAddCategory = false
   @State private var editCategory: Category?
 
@@ -27,8 +28,8 @@ struct CategoryEditListView: View {
             .buttonStyle(.plain)
           }
           .onDelete { indexSet in
-            for index in indexSet {
-              modelContext.delete(categories[index])
+            if indexSet.count == 1, let index = indexSet.first {
+              deleteCategory = categories[index]
             }
           }
         }
@@ -38,6 +39,19 @@ struct CategoryEditListView: View {
       }
     }
     .navigationTitle(.titleEditCategories)
+    .alert(.titleDeleteCategory, item: $deleteCategory) { category in
+      Button(.buttonKeepShifts) {
+        modelContext.delete(category)
+      }
+      Button(.buttonDeleteShifts, role: .destructive) {
+        for shift in category.shifts {
+          modelContext.delete(shift)
+        }
+        modelContext.delete(category)
+      }
+    } message: { category in
+      Text(.descriptionDeleteCategory(name: category.name))
+    }
     .toolbar {
       ToolbarItem(placement: .topBarLeading) {
         Button(.buttonAddCategory, systemImage: "plus") {
