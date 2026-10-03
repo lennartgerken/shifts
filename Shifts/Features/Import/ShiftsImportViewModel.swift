@@ -137,14 +137,12 @@ final class ShiftsImportViewModel {
         for shift in shiftImportResults.deletedShifts {
           notificationService.remove(for: shift)
         }
-        if settings.sendNotifications {
-          for shift in shiftImportResults.newShifts {
-            do {
-              try await notificationService.schedule(
-                for: shift, notificationTimings: settings.notificationTimings)
-            } catch {
-              logger.error("Could not schedule notification: \(error)")
-            }
+        for shift in shiftImportResults.newShifts {
+          do {
+            try await notificationService.schedule(
+              for: shift, notificationTimings: settings.notificationTimings)
+          } catch {
+            logger.error("Could not schedule notification: \(error)")
           }
         }
       } catch {

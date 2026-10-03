@@ -47,13 +47,13 @@ struct CategoryEditListView: View {
       Button(.buttonKeepShifts) {
         let shifts = category.shifts
         modelContext.delete(category)
-        for shift in shifts {
-          Task {
+        Task {
+          for shift in shifts {
             do {
               try await notificationService.update(
                 for: shift, notificationTimings: settings.notificationTimings)
             } catch {
-              logger.error("Could not update notifications: \(error)")
+              logger.error("Could not update notification: \(error)")
             }
           }
         }

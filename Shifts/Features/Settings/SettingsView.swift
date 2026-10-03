@@ -17,18 +17,14 @@ struct SettingsView: View {
 
     Form {
       SettingsImportSectionView()
-      Section(.titleTags) {
+      Section {
         Button(.buttonEditTags, systemImage: "tag") {
           showEditTags = true
         }
         .accessibilityIdentifier("settings.editTagsButton")
-      }
-      Section(.titleCategories) {
         Button(.buttonEditCategories, systemImage: "flag") {
           showEditCategories = true
         }
-      }
-      Section(.titleShiftReferences) {
         Button(
           .buttonDeleteShiftReferences,
           systemImage: "document.on.document"
@@ -36,14 +32,14 @@ struct SettingsView: View {
           showEditShiftReferences = true
         }
         .accessibilityIdentifier("settings.deleteShiftReferencesButton")
+        SettingsNotificationsSectionView(notificationService: notificationService)
       }
-      SettingsNotificationsSectionView(notificationService: notificationService)
     }
     .sheet(
       isPresented: $showEditTags,
       content: {
         NavigationStack {
-          TagEditListView()
+          TagEditListView(notificationService: notificationService)
         }
       }
     )

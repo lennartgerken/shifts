@@ -1,5 +1,11 @@
+import OSLog
 import SwiftData
 import SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "CategoryEditView"
+)
 
 enum CategoryEditMode {
   case add
@@ -40,10 +46,8 @@ struct CategoryEditView: View {
         TextField(.labelName, text: $name)
           .accessibilityIdentifier("categoeyEdit.nameTextField")
         ColorPicker(.labelColor, selection: $color, supportsOpacity: false)
-        if settings.sendNotifications {
-          Toggle(isOn: $sendNotification) {
-            Text(.labelSendNotifications)
-          }
+        Toggle(isOn: $sendNotification) {
+          Text(.labelSendNotifications)
         }
       } footer: {
         if let error {
@@ -63,7 +67,7 @@ struct CategoryEditView: View {
       ToolbarItem(placement: .confirmationAction) {
         Button(.buttonSave, systemImage: "checkmark") {
           Task {
-            if await save() {
+            if save() {
               dismiss()
             }
           }
@@ -73,7 +77,7 @@ struct CategoryEditView: View {
     }
   }
 
-  private func save() async -> Bool {
+  private func save() -> Bool {
     do {
       let resolvedColor = color.resolve(in: environment)
       if case .add = mode {
@@ -89,9 +93,16 @@ struct CategoryEditView: View {
           colorRGB: try ColorRGB(
             red: Double(resolvedColor.red), green: Double(resolvedColor.green),
             blue: Double(resolvedColor.blue)), sendNotification: sendNotification)
-        for shift in category.shifts {
-          try await notificationService.update(
-            for: shift, notificationTimings: settings.notificationTimings)
+
+        Task {
+          for shift in category.shifts {
+            do {
+              try await notificationService.update(
+                for: shift, notificationTimings: settings.notificationTimings)
+            } catch {
+              logger.error("Could not update notification: \(error)")
+            }
+          }
         }
       }
 

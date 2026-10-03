@@ -19,93 +19,29 @@ struct SettingsNotificationsSectionView: View {
   var body: some View {
     @Bindable var settings = settings
 
-    Section(.titleNotifications) {
-      Toggle(
-        .labelSendNotifications,
-        isOn: $settings.sendNotifications
-      )
-      .onChange(of: settings.sendNotifications) { _, newValue in
-        updateNotifications(enabled: newValue)
+    Section {
+      Button(.buttonEditReminders, systemImage: "bell") {
+        showEditNotification = true
       }
-      .alert(.titleEnableNotifications, isPresented: $showNotificationAlert) {
-        Button(.buttonClose) {}
-      } message: {
-        Text(.descriptionEnableNotifications)
+      .sheet(isPresented: $showEditNotification) {
+        NavigationStack {
+          NotificationTimingsListView(
+            notificationTimings: $settings.notificationTimings
+          )
+        }
+        .presentationDetents([.medium])
       }
       .onChange(of: settings.notificationTimings) { _, _ in
-        updateNotifications(enabled: settings.sendNotifications)
-      }
-      .accessibilityIdentifier("settings.notificationsToggle")
-
-      if settings.sendNotifications {
-        Button(.buttonEditReminders, systemImage: "bell") {
-          showEditNotification = true
-        }
-        .sheet(isPresented: $showEditNotification) {
-          NavigationStack {
-            NotificationTimingsListView(
-              notificationTimings: $settings.notificationTimings
-            )
+        Task {
+          do {
+            try await notificationService.scheduleUpcomingShifts(
+              modelContext: modelContext, notificationTimings: settings.notificationTimings)
+          } catch {
+            logger.error("Could not schedule notifications: \(error)")
           }
-          .presentationDetents([.medium])
-        }
-        .accessibilityIdentifier("settings.editRemindersButton")
-      }
-    }
-  }
-
-  private func scheduleUpcomingShifts() async {
-    let currentDate = Date()
-    let descriptor = FetchDescriptor<Shift>(
-      predicate: #Predicate { shift in
-        shift.start >= currentDate
-      }
-    )
-    do {
-      let upcomingShifts = try modelContext.fetch(descriptor)
-      for shift in upcomingShifts {
-        do {
-          try await notificationService.schedule(
-            for: shift,
-            notificationTimings: settings.notificationTimings
-          )
-        } catch {
-          logger.error("Could not schedule notification: \(error)")
         }
       }
-    } catch {
-      logger.error("Could not fetch upcoming shifts: \(error)")
-    }
-  }
-
-  private func updateNotifications(enabled: Bool) {
-    if enabled {
-      Task {
-        do {
-          let status =
-            await notificationService.authorizationStatus()
-          switch status {
-          case .notDetermined:
-            let granted =
-              try await notificationService
-              .requestAuthorization()
-            if granted {
-              await scheduleUpcomingShifts()
-            } else {
-              settings.sendNotifications = false
-            }
-          case .authorized:
-            await scheduleUpcomingShifts()
-          default:
-            settings.sendNotifications = false
-            showNotificationAlert = true
-          }
-        } catch {
-          logger.error("Could not request notification authorization: \(error)")
-        }
-      }
-    } else {
-      notificationService.removeAll()
+      .accessibilityIdentifier("settings.editRemindersButton")
     }
   }
 }

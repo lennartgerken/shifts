@@ -42,9 +42,6 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let timingRow = notificationTimingsListScreen.getTimingRow(value: 1, timing: .hour)
 
-    scrollToElement(settingsScreen.notificationsToggle, app: app)
-    toggleNotifications()
-    scrollToElement(settingsScreen.editRemindersButton, app: app)
     settingsScreen.editRemindersButton.tap()
     timingRow.swipeLeft()
     app.buttons["Löschen"].tap()
@@ -59,9 +56,6 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let notificationTimingAddScreen = NotificationTimingAddScreen(app: app)
 
-    scrollToElement(settingsScreen.notificationsToggle, app: app)
-    toggleNotifications()
-    scrollToElement(settingsScreen.editRemindersButton, app: app)
     settingsScreen.editRemindersButton.tap()
     notificationTimingsListScreen.addButton.tap()
 
@@ -70,19 +64,5 @@ final class SettingsUITests: BaseUITests {
     notificationTimingAddScreen.saveButton.tap()
 
     XCTAssert(notificationTimingsListScreen.getTimingRow(value: count, timing: type).exists)
-  }
-
-  func toggleNotifications() {
-    addUIInterruptionMonitor(withDescription: "Notification Permission") { alert in
-      let allowButton = alert.buttons["Erlauben"]
-
-      if allowButton.exists {
-        allowButton.tap()
-        return true
-      }
-
-      return false
-    }
-    settingsScreen.notificationsToggle.tapToggle()
   }
 }

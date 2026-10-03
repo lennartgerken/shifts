@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import UserNotifications
 
 enum NotificationTimingType: Encodable, Decodable {
@@ -48,6 +49,8 @@ protocol NotificationServicing {
     async throws
   func update(for shift: Shift, notificationTimings: Set<NotificationTiming>)
     async throws
+  func scheduleUpcomingShifts(
+    modelContext: ModelContext, notificationTimings: Set<NotificationTiming>) async throws
   func remove(for shift: Shift)
   func removeAll()
 }
@@ -111,6 +114,8 @@ struct NotificationService: NotificationServicing {
   func schedule(for shift: Shift, notificationTimings: Set<NotificationTiming>)
     async throws
   {
+    if try await isAuthorized() == false { return }
+
     if shift.category == nil || shift.category?.sendNotification == true {
       let ids = Self.getNotificationIDs(for: shift)
       let notificationTimingsArray = Array(notificationTimings).prefix(ids.count)
@@ -184,10 +189,21 @@ struct NotificationService: NotificationServicing {
     }
   }
 
+  func isAuthorized() async throws -> Bool {
+    let status = await authorizationStatus()
+    if status == .notDetermined {
+      return try await requestAuthorization()
+    }
+    return status == .authorized
+  }
+
   @MainActor
   func update(for shift: Shift, notificationTimings: Set<NotificationTiming>)
     async throws
   {
+    if try await isAuthorized() == false { return }
+
+    if await authorizationStatus() != .authorized { return }
     remove(for: shift)
     try await schedule(for: shift, notificationTimings: notificationTimings)
   }
@@ -196,6 +212,26 @@ struct NotificationService: NotificationServicing {
     notificationCenter.removePendingNotificationRequests(
       withIdentifiers: Self.getNotificationIDs(for: shift)
     )
+  }
+
+  @MainActor
+  func scheduleUpcomingShifts(
+    modelContext: ModelContext, notificationTimings: Set<NotificationTiming>
+  ) async throws {
+    if await authorizationStatus() != .authorized { return }
+
+    removeAll()
+
+    let currentDate = Date()
+    let shifts = try modelContext.fetch(
+      FetchDescriptor<Shift>(
+        predicate: #Predicate { shift in
+          shift.start >= currentDate
+        }
+      ))
+    for shift in shifts {
+      try await schedule(for: shift, notificationTimings: notificationTimings)
+    }
   }
 
   func removeAll() {

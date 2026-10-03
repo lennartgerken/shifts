@@ -173,7 +173,6 @@ import SwiftData
         ]
       )
       settings.importSettings = importSettings
-      settings.sendNotifications = false
       settings.notificationTimings = [NotificationTiming(value: 1, timing: .hour)]
     }
   }

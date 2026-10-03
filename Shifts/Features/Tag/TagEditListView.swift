@@ -1,9 +1,18 @@
+import OSLog
+import SwiftData
 import SwiftUI
-import _SwiftData_SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "TagEditListView"
+)
 
 struct TagEditListView: View {
+  let notificationService: NotificationServicing
+
   @Environment(\.modelContext) private var modelContext
   @Environment(\.dismiss) private var dismiss
+  @Environment(AppSettings.self) private var settings
   @Query(sort: \Tag.name) private var tags: [Tag]
   @State private var tagToEdit: Tag? = nil
   @State private var showAddTag: Bool = false
@@ -25,7 +34,19 @@ struct TagEditListView: View {
           }
           .onDelete { indexSet in
             for index in indexSet {
-              modelContext.delete(tags[index])
+              let tag = tags[index]
+              let shifts = tag.shifts
+              modelContext.delete(tag)
+              Task {
+                for shift in shifts {
+                  do {
+                    try await notificationService.update(
+                      for: shift, notificationTimings: settings.notificationTimings)
+                  } catch {
+                    logger.error("Could not update notification: \(error)")
+                  }
+                }
+              }
             }
           }
         }
@@ -49,7 +70,7 @@ struct TagEditListView: View {
     }
     .sheet(item: $tagToEdit) { tag in
       NavigationStack {
-        TagEditView(mode: .edit(tag: tag))
+        TagEditView(mode: .edit(tag: tag, notificationSercice: notificationService))
       }
       .presentationDetents([.medium])
     }
@@ -65,7 +86,7 @@ struct TagEditListView: View {
 #if DEBUG
   #Preview {
     NavigationStack {
-      TagEditListView()
+      TagEditListView(notificationService: NotificationService())
         .modelContainer(PreviewSupport.inMemoryContainer())
     }
   }

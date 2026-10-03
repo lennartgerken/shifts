@@ -148,30 +148,28 @@ struct ShiftEditView: View {
               "checkmark.arrow.trianglehead.clockwise"
           ) {
             successMessage = nil
-            Task {
-              if await save() {
-                let dateToShow = sameDay ? day : start
-                let dateFormatted = dateToShow.formatted(
-                  .dateTime.year().month().day()
-                )
-                successMessage =
-                  "\(String(localized: .successShiftSaved))\n\(dateFormatted)"
+            if save() {
+              let dateToShow = sameDay ? day : start
+              let dateFormatted = dateToShow.formatted(
+                .dateTime.year().month().day()
+              )
+              successMessage =
+                "\(String(localized: .successShiftSaved))\n\(dateFormatted)"
 
-                day = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: day
-                )!
-                start = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: start
-                )!
-                end = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: end
-                )!
-                useAsReference = false
-                referenceName = ""
-              }
+              day = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: day
+              )!
+              start = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: start
+              )!
+              end = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: end
+              )!
+              useAsReference = false
+              referenceName = ""
             }
           }
         }
@@ -182,7 +180,7 @@ struct ShiftEditView: View {
           systemImage: "checkmark"
         ) {
           Task {
-            if await save() {
+            if save() {
               dismiss()
             }
           }
@@ -202,7 +200,7 @@ struct ShiftEditView: View {
     }
   }
 
-  private func save() async -> Bool {
+  private func save() -> Bool {
     datesError = nil
     do {
       var startToSet = start
@@ -251,7 +249,7 @@ struct ShiftEditView: View {
 
         modelContext.insert(shift)
 
-        if settings.sendNotifications {
+        Task {
           do {
             try await notificationService.schedule(
               for: shift, notificationTimings: settings.notificationTimings)
@@ -281,7 +279,7 @@ struct ShiftEditView: View {
           }
         }
 
-        if settings.sendNotifications {
+        Task {
           do {
             try await notificationService.update(
               for: shift, notificationTimings: settings.notificationTimings)

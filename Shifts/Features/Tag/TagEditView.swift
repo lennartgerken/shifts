@@ -1,9 +1,15 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "TagEditView"
+)
+
 enum TagEditMode {
   case add
-  case edit(tag: Tag)
+  case edit(tag: Tag, notificationSercice: NotificationServicing)
 }
 
 struct TagEditView: View {
@@ -14,6 +20,7 @@ struct TagEditView: View {
   @Environment(\.dismiss) private var dismiss
   @Environment(\.modelContext) private var modelContext
   @Environment(\.self) private var environment
+  @Environment(AppSettings.self) private var settings
 
   private let mode: TagEditMode
   private let title: String
@@ -23,7 +30,7 @@ struct TagEditView: View {
     switch mode {
     case .add:
       title = String(localized: .titleAddTag)
-    case .edit(let tag):
+    case .edit(let tag, _):
       title = String(localized: .titleEditTag)
       self._name = State(initialValue: tag.name)
       self._color = State(initialValue: tag.colorRGB.color)
@@ -72,12 +79,22 @@ struct TagEditView: View {
             colorRGB: try ColorRGB(
               red: Double(resolvedColor.red), green: Double(resolvedColor.green),
               blue: Double(resolvedColor.blue))))
-      } else if case .edit(let tag) = mode {
+      } else if case .edit(let tag, let notificationService) = mode {
         try tag.updateValues(
           name: name,
           colorRGB: try ColorRGB(
             red: Double(resolvedColor.red), green: Double(resolvedColor.green),
             blue: Double(resolvedColor.blue)))
+        Task {
+          for shift in tag.shifts {
+            do {
+              try await notificationService.update(
+                for: shift, notificationTimings: settings.notificationTimings)
+            } catch {
+              logger.error("Could not update notification: \(error)")
+            }
+          }
+        }
       }
 
       return true
@@ -101,6 +118,8 @@ struct TagEditView: View {
 #Preview("Edit") {
   NavigationStack {
     TagEditView(
-      mode: .edit(tag: try! Tag(name: "Some tag", colorRGB: ColorRGB(red: 0, green: 1, blue: 1))))
+      mode: .edit(
+        tag: try! Tag(name: "Some tag", colorRGB: ColorRGB(red: 0, green: 1, blue: 1)),
+        notificationSercice: NotificationService()))
   }
 }
