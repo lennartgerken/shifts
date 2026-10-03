@@ -2,6 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct CategoryEditListView: View {
+  let notificationService: NotificationServicing
+
   @Environment(\.modelContext) private var modelContext
   @Environment(\.dismiss) private var dismiss
   @Query private var categories: [Category]
@@ -18,12 +20,7 @@ struct CategoryEditListView: View {
             Button {
               editCategory = category
             } label: {
-              HStack {
-                Image(systemName: "circle.fill")
-                  .foregroundStyle(category.colorRGB.color)
-                  .font(.system(size: 10))
-                Text(category.name)
-              }
+              CategoryRowView(category: category)
             }
             .buttonStyle(.plain)
           }
@@ -72,7 +69,8 @@ struct CategoryEditListView: View {
     }
     .sheet(item: $editCategory) { category in
       NavigationStack {
-        CategoryEditView(mode: .edit(category: category))
+        CategoryEditView(
+          mode: .edit(category: category, notificationService: NotificationService()))
       }
       .presentationDetents([.medium])
     }
@@ -81,13 +79,13 @@ struct CategoryEditListView: View {
 
 #Preview {
   NavigationStack {
-    CategoryEditListView()
+    CategoryEditListView(notificationService: NotificationService())
   }
   .modelContainer(PreviewSupport.inMemoryContainer())
 }
 
 #Preview {
   NavigationStack {
-    CategoryEditListView()
+    CategoryEditListView(notificationService: NotificationService())
   }
 }

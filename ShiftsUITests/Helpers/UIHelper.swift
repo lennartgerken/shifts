@@ -7,7 +7,7 @@ func scrollToElement(_ element: XCUIElement, app: XCUIApplication, maxSwipes: In
       return
     }
 
-    app.swipeDown()
+    app.swipeUp()
   }
 
   XCTFail("Could not find element \(element)")

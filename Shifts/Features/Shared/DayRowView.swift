@@ -39,7 +39,7 @@ struct DayRowView: View {
           Spacer()
           ShiftInfoView(shifts: day.shifts)
         }
-        VStack {
+        VStack(alignment: .leading) {
           ForEach(day.shifts) { shift in
             let start = shift.start < day.dateInterval.start ? day.dateInterval.start : shift.start
             let end =

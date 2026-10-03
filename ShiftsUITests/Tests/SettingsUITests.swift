@@ -42,7 +42,9 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let timingRow = notificationTimingsListScreen.getTimingRow(value: 1, timing: .hour)
 
+    scrollToElement(settingsScreen.notificationsToggle, app: app)
     toggleNotifications()
+    scrollToElement(settingsScreen.editRemindersButton, app: app)
     settingsScreen.editRemindersButton.tap()
     timingRow.swipeLeft()
     app.buttons["Löschen"].tap()
@@ -57,7 +59,9 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let notificationTimingAddScreen = NotificationTimingAddScreen(app: app)
 
+    scrollToElement(settingsScreen.notificationsToggle, app: app)
     toggleNotifications()
+    scrollToElement(settingsScreen.editRemindersButton, app: app)
     settingsScreen.editRemindersButton.tap()
     notificationTimingsListScreen.addButton.tap()
 

@@ -22,6 +22,10 @@ import SwiftData
       for shift in shifts {
         modelContext.delete(shift)
       }
+      let categories = try modelContext.fetch(FetchDescriptor<Category>())
+      for category in categories {
+        modelContext.delete(category)
+      }
 
       try modelContext.save()
     }

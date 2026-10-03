@@ -27,7 +27,11 @@ struct ActiveHoursView: View {
 
   var body: some View {
     VStack {
-      ForEach(Array(activeHoursByCategory.keys), id: \.self) { key in
+      let keys = activeHoursByCategory.keys.sorted {
+        activeHoursByCategory[$0]!.min()! < activeHoursByCategory[$1]!.min()!
+      }
+
+      ForEach(keys, id: \.self) { key in
         let currentActiveHours = activeHoursByCategory[key]!
         let color = key?.colorRGB.color ?? .primary
 

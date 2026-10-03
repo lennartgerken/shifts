@@ -88,10 +88,11 @@ struct NotificationServiceTests {
   @Test func scheduleNotifications() async throws {
     let notes = "Notizen zu meiner Schicht."
     let tags = [
-      try! Tag(name: "Tag 1", colorRed: 1, colorBlue: 0, colorGreen: 0),
-      try! Tag(name: "Tag 2", colorRed: 0, colorBlue: 1, colorGreen: 0),
+      try! Tag(name: "Tag 1", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0)),
+      try! Tag(name: "Tag 2", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0)),
     ]
-    try! shift1.updateValues(start: shift1.start, end: shift1.end, notes: notes, tags: tags)
+    try! shift1.updateValues(
+      start: shift1.start, end: shift1.end, notes: notes, tags: tags, category: nil)
 
     let notificationTimings: Set<NotificationTiming> = [
       NotificationTiming(value: 1, timing: .day),
@@ -168,7 +169,8 @@ struct NotificationServiceTests {
       start: newStart,
       end: newEnd,
       notes: nil,
-      tags: []
+      tags: [],
+      category: nil
     )
 
     try await notificationService.update(
