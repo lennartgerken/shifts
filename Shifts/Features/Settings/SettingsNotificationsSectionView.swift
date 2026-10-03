@@ -1,5 +1,11 @@
+import OSLog
 import SwiftData
 import SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "SettingsNotificationsSectionView"
+)
 
 struct SettingsNotificationsSectionView: View {
   let notificationService: NotificationServicing
@@ -48,19 +54,27 @@ struct SettingsNotificationsSectionView: View {
     }
   }
 
-  private func scheduleUpcomingShifts() async throws {
+  private func scheduleUpcomingShifts() async {
     let currentDate = Date()
     let descriptor = FetchDescriptor<Shift>(
       predicate: #Predicate { shift in
         shift.start >= currentDate
       }
     )
-    let upcomingShifts = try modelContext.fetch(descriptor)
-    for shift in upcomingShifts {
-      try await notificationService.schedule(
-        for: shift,
-        notificationTimings: settings.notificationTimings
-      )
+    do {
+      let upcomingShifts = try modelContext.fetch(descriptor)
+      for shift in upcomingShifts {
+        do {
+          try await notificationService.schedule(
+            for: shift,
+            notificationTimings: settings.notificationTimings
+          )
+        } catch {
+          logger.error("Could not schedule notification: \(error)")
+        }
+      }
+    } catch {
+      logger.error("Could not fetch upcoming shifts: \(error)")
     }
   }
 
@@ -76,18 +90,18 @@ struct SettingsNotificationsSectionView: View {
               try await notificationService
               .requestAuthorization()
             if granted {
-              try await scheduleUpcomingShifts()
+              await scheduleUpcomingShifts()
             } else {
               settings.sendNotifications = false
             }
           case .authorized:
-            try await scheduleUpcomingShifts()
+            await scheduleUpcomingShifts()
           default:
             settings.sendNotifications = false
             showNotificationAlert = true
           }
         } catch {
-          print(error)
+          logger.error("Could not request notification authorization: \(error)")
         }
       }
     } else {

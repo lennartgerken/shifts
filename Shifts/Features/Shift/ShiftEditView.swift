@@ -1,5 +1,11 @@
+import OSLog
 import SwiftData
 import SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "ShiftEditView"
+)
 
 enum ShiftEditMode {
   case add(date: Date?)
@@ -250,7 +256,7 @@ struct ShiftEditView: View {
             try await notificationService.schedule(
               for: shift, notificationTimings: settings.notificationTimings)
           } catch {
-            print("Failed to schedule notification:", error)
+            logger.error("Could not schedule notification: \(error)")
           }
         }
       } else if case .edit(let shift) = mode {
@@ -280,7 +286,7 @@ struct ShiftEditView: View {
             try await notificationService.update(
               for: shift, notificationTimings: settings.notificationTimings)
           } catch {
-            print("Failed to update notification:", error)
+            logger.error("Could not update notification: \(error)")
           }
         }
       }
