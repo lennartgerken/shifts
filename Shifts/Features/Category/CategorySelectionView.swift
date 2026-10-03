@@ -2,39 +2,35 @@ import SwiftData
 import SwiftUI
 
 struct CategorySelectionView: View {
-  @Binding var selectedCategories: Set<Category?>
+  @Binding var category: Category?
   @Query(sort: \Category.name) private var categories: [Category]
-  @Environment(\.dismiss) private var dismiss
+  @State private var showAddCategory = false
 
   var body: some View {
-    List(selection: $selectedCategories) {
-      CategoryRowView(
-        category: try! Category(
-          name: String(localized: .pickerValueDefault),
-          colorRGB: try! ColorRGB(red: 0, green: 0, blue: 0))
-      ).tag(nil as Category?)
-      ForEach(categories) { category in
-        CategoryRowView(category: category)
-          .tag(category)
-          .accessibilityElement(children: .contain)
-          .accessibilityIdentifier("tagSelection.tagRow-\(category.name)")
-      }
-    }
-    .environment(\.editMode, .constant(.active))
-    .navigationTitle(.titleSelectCategories)
-    .toolbar {
-      ToolbarItem(placement: .confirmationAction) {
-        Button(.buttonDone, systemImage: "checkmark") {
-          dismiss()
+    Section {
+      Picker(.labelCategory, selection: $category) {
+        Text(.pickerValueDefault).tag(nil as Category?)
+        ForEach(categories) { category in
+          Text(category.name).tag(category)
         }
+      }
+      Button(.buttonAddCategory) {
+        showAddCategory = true
+      }
+      .sheet(isPresented: $showAddCategory) {
+        NavigationStack {
+          CategoryEditView(mode: .add)
+        }
+        .presentationDetents([.medium])
       }
     }
   }
 }
 
 #Preview {
-  NavigationStack {
-    CategorySelectionView(selectedCategories: .constant([]))
+  Form {
+    CategorySelectionView(category: .constant(nil))
       .modelContainer(PreviewSupport.inMemoryContainer())
+      .environment(AppSettings())
   }
 }

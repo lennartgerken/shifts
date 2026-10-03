@@ -30,8 +30,6 @@ struct ShiftEditView: View {
   @State private var datesError: String?
   @State private var successMessage: String?
 
-  @State private var showAddCategory = false
-
   init(mode: ShiftEditMode, notificationService: NotificationServicing) {
     self.mode = mode
     self.notificationService = notificationService
@@ -102,17 +100,7 @@ struct ShiftEditView: View {
           ErrorView(error: error)
         }
       }
-      Section {
-        Picker(.labelCategory, selection: $category) {
-          Text(.pickerValueDefault).tag(nil as Category?)
-          ForEach(categories) { category in
-            Text(category.name).tag(category)
-          }
-        }
-        Button(.buttonAddCategory) {
-          showAddCategory = true
-        }
-      }
+      CategorySelectionView(category: $category)
       Section(.titleNotes) {
         TextField(
           .labelNotes,
@@ -137,12 +125,6 @@ struct ShiftEditView: View {
             .accessibilityIdentifier("shiftEdit.referenceNameTextField")
         }
       }
-    }
-    .sheet(isPresented: $showAddCategory) {
-      NavigationStack {
-        CategoryEditView(mode: .add)
-      }
-      .presentationDetents([.medium])
     }
     .scrollDismissesKeyboard(.interactively)
     .navigationTitle(title)
@@ -325,6 +307,7 @@ struct ShiftEditView: View {
       notificationService: NotificationService()
     )
   }
+  .modelContainer(PreviewSupport.inMemoryContainer())
   .environment(AppSettings())
 }
 
@@ -343,5 +326,6 @@ struct ShiftEditView: View {
       notificationService: NotificationService()
     )
   }
+  .modelContainer(PreviewSupport.inMemoryContainer())
   .environment(AppSettings())
 }

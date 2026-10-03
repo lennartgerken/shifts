@@ -12,7 +12,10 @@ protocol ShiftsImportServicing {
   func importShifts(from image: CGImage, importSettings: ImportSettingsValidated) async throws
     -> [ParsedShift]
 
-  func finalize(modelContext: ModelContext, shifts: [ParsedShift], overwriteShifts: OverwriteShifts)
+  func finalize(
+    modelContext: ModelContext, shifts: [ParsedShift], overwriteShifts: OverwriteShifts,
+    category: Category?
+  )
     async throws -> ShiftImportResult
 }
 
@@ -47,7 +50,8 @@ struct ShiftsImportService: ShiftsImportServicing {
 
   @MainActor
   func finalize(
-    modelContext: ModelContext, shifts parsedShifts: [ParsedShift], overwriteShifts: OverwriteShifts
+    modelContext: ModelContext, shifts parsedShifts: [ParsedShift],
+    overwriteShifts: OverwriteShifts, category: Category?
   ) async throws
     -> ShiftImportResult
   {
@@ -86,7 +90,8 @@ struct ShiftsImportService: ShiftsImportServicing {
     }
 
     for parsedShift in parsedShifts {
-      if let shift = try? Shift(start: parsedShift.start, end: parsedShift.end) {
+      if let shift = try? Shift(start: parsedShift.start, end: parsedShift.end, category: category)
+      {
         modelContext.insert(shift)
         newShifts.append(shift)
       }

@@ -86,7 +86,7 @@ struct ShiftsImportServiceTests {
       from: try getCGImage(fromResource: "schedule", withExtension: "png"),
       importSettings: ImportSettingsValidated(settings: importSettings))
     let shiftImportResults = try await shiftsImportService.finalize(
-      modelContext: modelContext, shifts: parsedShifts, overwriteShifts: .byStartDay)
+      modelContext: modelContext, shifts: parsedShifts, overwriteShifts: .byStartDay, category: nil)
 
     let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
 
@@ -120,7 +120,8 @@ struct ShiftsImportServiceTests {
       overwriteShifts: .byTimespan(
         from: Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 1))!,
         to: Calendar.current.date(
-          from: DateComponents(year: 2026, month: 1, day: 31, hour: 23, minute: 59))!))
+          from: DateComponents(year: 2026, month: 1, day: 31, hour: 23, minute: 59))!),
+      category: nil)
 
     let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
 
@@ -152,7 +153,8 @@ struct ShiftsImportServiceTests {
       from: try getCGImage(fromResource: "schedule", withExtension: "png"),
       importSettings: ImportSettingsValidated(settings: importSettings))
     let shiftImportResults = try await shiftsImportService.finalize(
-      modelContext: modelContext, shifts: parsedShifts, overwriteShifts: .noOverwrite)
+      modelContext: modelContext, shifts: parsedShifts, overwriteShifts: .noOverwrite, category: nil
+    )
 
     let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
 

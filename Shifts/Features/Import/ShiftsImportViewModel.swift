@@ -43,6 +43,7 @@ final class ShiftsImportViewModel {
   }
   var errorMessage: String?
 
+  var category: Category?
   var overwriteShifts: ShiftsImportViewOverwriteShifts = .byTimespan
   var overwriteShiftsTimespanStart: Date = Date()
   var overwriteShiftsTimespanEnd: Date = Date()
@@ -123,7 +124,8 @@ final class ShiftsImportViewModel {
         let shiftImportResults = try await shiftsImportService.finalize(
           modelContext: modelContext,
           shifts: importedShifts,
-          overwriteShifts: overwriteToSet
+          overwriteShifts: overwriteToSet,
+          category: category
         )
         for shift in shiftImportResults.deletedShifts {
           notificationService.remove(for: shift)

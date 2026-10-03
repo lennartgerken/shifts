@@ -27,6 +27,7 @@ struct ShiftsImportView: View {
       if let importedDays = viewModel.importedDays {
         if !importedDays.isEmpty {
           List {
+            CategorySelectionView(category: $viewModel.category)
             Section {
               Picker(.labelOverwriteShifts, selection: $viewModel.overwriteShifts) {
                 Text(.pickerValueImportOverwriteNoOverwrite).tag(
