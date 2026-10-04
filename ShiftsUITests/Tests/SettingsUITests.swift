@@ -1,11 +1,12 @@
 import XCTest
 
 final class SettingsUITests: BaseUITests {
+  var calendarScreen: CalendarScreen!
   var settingsScreen: SettingsScreen!
 
   override func setUpWithError() throws {
     try super.setUpWithError()
-    let calendarScreen = CalendarScreen(app: app)
+    calendarScreen = CalendarScreen(app: app)
     settingsScreen = SettingsScreen(app: app)
 
     calendarScreen.openMenuButton.tap()
@@ -23,6 +24,52 @@ final class SettingsUITests: BaseUITests {
 
     XCTAssert(!tagRow.exists)
     XCTAssert(tagEditListScreen.tagRow(for: "Tag 2").exists)
+  }
+
+  func testRemoveCategoryKeepShifts() throws {
+    let shiftDate = getDayOfMonth(day: 1)
+
+    let categoryEditListScreen = CategoryEditListScreen(app: app)
+    let categoryRow = categoryEditListScreen.categoryRow(for: "Category 1")
+    let shiftDetailsScreen = ShiftDetailsScreen(app: app)
+
+    settingsScreen.editCategoriesButton.tap()
+
+    categoryRow.swipeLeft()
+    app.buttons["Löschen"].tap()
+    categoryEditListScreen.keepShiftsButton.tap()
+    XCTAssert(!categoryRow.exists)
+
+    categoryEditListScreen.doneButton.tap()
+    settingsScreen.doneButton.tap()
+
+    calendarScreen.selectDate(shiftDate)
+    calendarScreen.dayRow(for: shiftDate).element.tap()
+
+    XCTAssert(shiftDetailsScreen.categoryTextField.label == "Kategorie, Standard")
+  }
+
+  func testRemoveCategoryDeleteShifts() throws {
+    let shiftDate = getDayOfMonth(day: 1)
+
+    let categoryEditListScreen = CategoryEditListScreen(app: app)
+    let categoryRow = categoryEditListScreen.categoryRow(for: "Category 1")
+    let shiftDetailsScreen = ShiftDetailsScreen(app: app)
+
+    settingsScreen.editCategoriesButton.tap()
+
+    categoryRow.swipeLeft()
+    app.buttons["Löschen"].tap()
+    categoryEditListScreen.deleteShiftsButton.tap()
+    XCTAssert(!categoryRow.exists)
+
+    categoryEditListScreen.doneButton.tap()
+    settingsScreen.doneButton.tap()
+
+    calendarScreen.selectDate(shiftDate)
+
+    calendarScreen.dayRow(for: shiftDate).element.tap()
+    XCTAssertFalse(shiftDetailsScreen.startTextField.exists)
   }
 
   func testRemoveShiftReference() throws {

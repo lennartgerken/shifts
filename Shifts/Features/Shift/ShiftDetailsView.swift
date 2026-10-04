@@ -31,11 +31,10 @@ struct ShiftDetailsView: View {
             .accessibilityIdentifier("shiftDetails.endTextField")
         }
       }
-      if let category = shift.category {
-        Section {
-          LabeledContent(.labelCategory) {
-            Text(category.name)
-          }
+      Section {
+        LabeledContent(.labelCategory) {
+          Text(shift.category?.name ?? String(localized: .pickerValueDefault))
+            .accessibilityIdentifier("shiftDetails.categoryText")
         }
       }
       Section(.titleNotes) {

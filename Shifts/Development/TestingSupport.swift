@@ -43,6 +43,7 @@ import SwiftData
         let endMinute: Int
         let notes: String?
         let tags: [Tag]?
+        let category: Category?
 
         init(
           day: Int,
@@ -52,7 +53,8 @@ import SwiftData
           endHour: Int,
           endMinute: Int,
           notes: String? = nil,
-          tags: [Tag] = []
+          tags: [Tag] = [],
+          category: Category? = nil
         ) {
           self.day = day
           self.startHour = startHour
@@ -62,6 +64,7 @@ import SwiftData
           self.endMinute = endMinute
           self.notes = notes
           self.tags = tags
+          self.category = category
         }
       }
 
@@ -80,6 +83,13 @@ import SwiftData
         modelContext.insert(tag)
       }
 
+      let category = try Category(
+        name: "Category 1",
+        colorRGB: try ColorRGB(red: 0, green: 1, blue: 0)
+      )
+
+      modelContext.insert(category)
+
       let shiftsToAdd = [
         ShiftToAdd(
           day: 1,
@@ -88,7 +98,8 @@ import SwiftData
           endHour: 15,
           endMinute: 0,
           notes: "Some note",
-          tags: [tags[0]]
+          tags: [tags[0]],
+          category: category
         ),
         ShiftToAdd(
           day: 2,
@@ -131,20 +142,14 @@ import SwiftData
           start: start,
           end: end,
           notes: shiftToAdd.notes,
-          tags: shiftToAdd.tags ?? []
+          tags: shiftToAdd.tags ?? [],
+          category: shiftToAdd.category
         )
         modelContext.insert(shift)
         shifts.append(shift)
       }
 
       modelContext.insert(ShiftReference(name: "Reference 1", shift: shifts[0]))
-
-      modelContext.insert(
-        try Category(
-          name: "Category 1",
-          colorRGB: try ColorRGB(red: 0, green: 1, blue: 0)
-        )
-      )
 
       try modelContext.save()
     }

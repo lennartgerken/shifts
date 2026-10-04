@@ -15,6 +15,14 @@ struct ShiftEditScreen {
     app.datePickers["shiftEdit.endDatePicker"]
   }
 
+  var categoryPicker: XCUIElement {
+    app.buttons["categorySelection.categoryPicker"]
+  }
+
+  var addCategoryButton: XCUIElement {
+    app.buttons["categorySelection.addCategoryButton"]
+  }
+
   var notesTextField: XCUIElement {
     app.textFields["shiftEdit.notesTextField"]
   }

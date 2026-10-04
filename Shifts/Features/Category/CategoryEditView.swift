@@ -44,7 +44,7 @@ struct CategoryEditView: View {
     Form {
       Section {
         TextField(.labelName, text: $name)
-          .accessibilityIdentifier("categoeyEdit.nameTextField")
+          .accessibilityIdentifier("categoryEdit.nameTextField")
         ColorPicker(.labelColor, selection: $color, supportsOpacity: false)
         Toggle(isOn: $sendNotification) {
           Text(.labelSendNotifications)
@@ -72,7 +72,7 @@ struct CategoryEditView: View {
             }
           }
         }
-        .accessibilityIdentifier("categoeyEdit.saveButton")
+        .accessibilityIdentifier("categoryEdit.saveButton")
       }
     }
   }

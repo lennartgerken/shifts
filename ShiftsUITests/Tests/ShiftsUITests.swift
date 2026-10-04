@@ -81,6 +81,29 @@ final class ShiftsUITests: BaseUITests {
     XCTAssertEqual(shiftDetailsScreen.startTextField.label, "Beginn, 10:30")
   }
 
+  func testEditShiftCreateCategory() throws {
+    let date = getDayOfMonth(day: 1)
+    let name = "New category"
+
+    let dayRow = calendarScreen.dayRow(for: date)
+    let categoryEditScreen = CategoryEditScreen(app: app)
+
+    calendarScreen.selectDate(date)
+    dayRow.element.tap()
+
+    shiftDetailsScreen.editButton.tap()
+
+    shiftEditScreen.addCategoryButton.tap()
+    categoryEditScreen.nameTextField.tap()
+    categoryEditScreen.nameTextField.typeText(name)
+    categoryEditScreen.saveButton.tap()
+    shiftEditScreen.categoryPicker.tap()
+    app.buttons[name].tap()
+
+    shiftEditScreen.saveButton.tap()
+    XCTAssert(shiftDetailsScreen.categoryTextField.label == "Kategorie, \(name)")
+  }
+
   func testDeleteShift() throws {
     let date = getDayOfMonth(day: 1)
     let dayRow = calendarScreen.dayRow(for: date)

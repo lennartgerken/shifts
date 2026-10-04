@@ -175,4 +175,21 @@ struct ShiftsImportServiceTests {
 
     #expect(shiftImportResults.deletedShifts.count == 0)
   }
+
+  @Test func setCategory() async throws {
+    let category = try Category(name: "Category", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0))
+    modelContext.insert(category)
+
+    let parsedShifts = try await shiftsImportService.importShifts(
+      from: try getCGImage(fromResource: "schedule", withExtension: "png"),
+      importSettings: ImportSettingsValidated(settings: importSettings))
+    let _ = try await shiftsImportService.finalize(
+      modelContext: modelContext, shifts: parsedShifts, overwriteShifts: .noOverwrite,
+      category: category
+    )
+
+    let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
+    let firstShift = fetchedShifts.first
+    #expect(firstShift?.category == category)
+  }
 }

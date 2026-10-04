@@ -25,6 +25,7 @@ struct SettingsView: View {
         Button(.buttonEditCategories, systemImage: "flag") {
           showEditCategories = true
         }
+        .accessibilityIdentifier("settings.editCategoriesButton")
         Button(
           .buttonDeleteShiftReferences,
           systemImage: "document.on.document"
@@ -67,6 +68,7 @@ struct SettingsView: View {
         } label: {
           Label(.buttonDone, systemImage: "checkmark")
         }
+        .accessibilityIdentifier("settings.doneButton")
       }
     }
   }

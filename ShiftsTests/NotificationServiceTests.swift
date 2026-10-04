@@ -81,15 +81,15 @@ struct NotificationServiceTests {
       second: 0,
       of: date2
     )!
-    shift1 = try! Shift(start: start1, end: end1)
-    shift2 = try! Shift(start: start2, end: end2)
+    shift1 = try Shift(start: start1, end: end1)
+    shift2 = try Shift(start: start2, end: end2)
   }
 
   @Test func scheduleNotifications() async throws {
     let notes = "Notizen zu meiner Schicht."
     let tags = [
-      try! Tag(name: "Tag 1", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0)),
-      try! Tag(name: "Tag 2", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0)),
+      try Tag(name: "Tag 1", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)),
+      try Tag(name: "Tag 2", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)),
     ]
     try! shift1.updateValues(
       start: shift1.start, end: shift1.end, notes: notes, tags: tags, category: nil)
@@ -144,6 +144,38 @@ struct NotificationServiceTests {
           == "Deine Schicht beginnt in \(notificationTiming.value) \(messageModifier).\n\(notes)\n\(tags.map(\.name).joined(separator: ", "))"
       )
     }
+  }
+
+  @Test func scheduleNotificationForCategoryEnabled() async throws {
+    try shift1.updateValues(
+      start: shift1.start, end: shift1.end, notes: nil, tags: [],
+      category: try Category(
+        name: "Category", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0), sendNotification: true)
+    )
+    let notificationTimings: Set<NotificationTiming> = [
+      NotificationTiming(value: 1, timing: .day)
+    ]
+
+    try await notificationService.schedule(for: shift1, notificationTimings: notificationTimings)
+    let pendingNotifications =
+      await notificationCenter.pendingNotificationRequests()
+    #expect(pendingNotifications.count == 1)
+  }
+
+  @Test func scheduleNotificationForCategoryDisabled() async throws {
+    try shift1.updateValues(
+      start: shift1.start, end: shift1.end, notes: nil, tags: [],
+      category: try Category(
+        name: "Category", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0), sendNotification: false
+      ))
+    let notificationTimings: Set<NotificationTiming> = [
+      NotificationTiming(value: 1, timing: .day)
+    ]
+
+    try await notificationService.schedule(for: shift1, notificationTimings: notificationTimings)
+    let pendingNotifications =
+      await notificationCenter.pendingNotificationRequests()
+    #expect(pendingNotifications.count == 0)
   }
 
   @Test func updateNotifications() async throws {

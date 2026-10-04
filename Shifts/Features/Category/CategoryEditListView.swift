@@ -30,6 +30,7 @@ struct CategoryEditListView: View {
               CategoryRowView(category: category)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("categoryEditList.categoryRow-\(category.name)")
           }
           .onDelete { indexSet in
             if indexSet.count == 1, let index = indexSet.first {
@@ -58,6 +59,7 @@ struct CategoryEditListView: View {
           }
         }
       }
+      .accessibilityIdentifier("categoryEditList.keepShiftsButton")
       Button(.buttonDeleteShifts, role: .destructive) {
         for shift in category.shifts {
           modelContext.delete(shift)
@@ -65,6 +67,7 @@ struct CategoryEditListView: View {
         }
         modelContext.delete(category)
       }
+      .accessibilityIdentifier("categoryEditList.deleteShiftsButton")
     } message: { category in
       Text(.descriptionDeleteCategory(name: category.name))
     }
@@ -78,6 +81,7 @@ struct CategoryEditListView: View {
         Button(.buttonDone, systemImage: "checkmark") {
           dismiss()
         }
+        .accessibilityIdentifier("categoryEditList.doneButton")
       }
     }
     .sheet(isPresented: $showAddCategory) {

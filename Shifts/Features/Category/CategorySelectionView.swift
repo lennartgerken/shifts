@@ -14,6 +14,7 @@ struct CategorySelectionView: View {
           Text(category.name).tag(category)
         }
       }
+      .accessibilityIdentifier("categorySelection.categoryPicker")
       Button(.buttonAddCategory) {
         showAddCategory = true
       }
@@ -23,6 +24,7 @@ struct CategorySelectionView: View {
         }
         .presentationDetents([.medium])
       }
+      .accessibilityIdentifier("categorySelection.addCategoryButton")
     }
   }
 }
