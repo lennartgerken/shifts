@@ -100,15 +100,17 @@ struct CategoryEditListView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    CategoryEditListView(notificationService: NotificationService())
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      CategoryEditListView(notificationService: NotificationService())
+    }
+    .modelContainer(PreviewSupport.inMemoryContainer())
   }
-  .modelContainer(PreviewSupport.inMemoryContainer())
-}
 
-#Preview {
-  NavigationStack {
-    CategoryEditListView(notificationService: NotificationService())
+  #Preview {
+    NavigationStack {
+      CategoryEditListView(notificationService: NotificationService())
+    }
   }
-}
+#endif

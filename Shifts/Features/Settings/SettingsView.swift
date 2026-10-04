@@ -74,12 +74,14 @@ struct SettingsView: View {
   }
 }
 
-#Preview {
-  let settings = AppSettings()
+#if DEBUG
+  #Preview {
+    let settings = AppSettings()
 
-  NavigationStack {
-    SettingsView(notificationService: NotificationService())
+    NavigationStack {
+      SettingsView(notificationService: NotificationService())
+    }
+    .environment(settings)
+    .modelContainer(PreviewSupport.inMemoryContainer())
   }
-  .environment(settings)
-  .modelContainer(PreviewSupport.inMemoryContainer())
-}
+#endif

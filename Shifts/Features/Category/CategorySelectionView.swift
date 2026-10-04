@@ -29,10 +29,12 @@ struct CategorySelectionView: View {
   }
 }
 
-#Preview {
-  Form {
-    CategorySelectionView(category: .constant(nil))
-      .modelContainer(PreviewSupport.inMemoryContainer())
-      .environment(AppSettings())
+#if DEBUG
+  #Preview {
+    Form {
+      CategorySelectionView(category: .constant(nil))
+        .modelContainer(PreviewSupport.inMemoryContainer())
+        .environment(AppSettings())
+    }
   }
-}
+#endif
