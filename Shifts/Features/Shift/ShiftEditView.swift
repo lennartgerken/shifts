@@ -304,32 +304,34 @@ struct ShiftEditView: View {
   }
 }
 
-#Preview {
-  NavigationStack {
-    ShiftEditView(
-      mode: .add(date: Date()),
-      notificationService: NotificationService()
-    )
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      ShiftEditView(
+        mode: .add(date: Date()),
+        notificationService: NotificationService()
+      )
+    }
+    .modelContainer(PreviewSupport.inMemoryContainer())
+    .environment(AppSettings())
   }
-  .modelContainer(PreviewSupport.inMemoryContainer())
-  .environment(AppSettings())
-}
 
-#Preview {
-  let calendar = Calendar.current
-  let start = calendar.date(
-    from: DateComponents(year: 2020, month: 1, day: 1, hour: 10, minute: 30)
-  )!
-  let end = calendar.date(
-    from: DateComponents(year: 2020, month: 1, day: 1, hour: 15, minute: 30)
-  )!
+  #Preview {
+    let calendar = Calendar.current
+    let start = calendar.date(
+      from: DateComponents(year: 2020, month: 1, day: 1, hour: 10, minute: 30)
+    )!
+    let end = calendar.date(
+      from: DateComponents(year: 2020, month: 1, day: 1, hour: 15, minute: 30)
+    )!
 
-  NavigationStack {
-    ShiftEditView(
-      mode: .edit(shift: try! Shift(start: start, end: end)),
-      notificationService: NotificationService()
-    )
+    NavigationStack {
+      ShiftEditView(
+        mode: .edit(shift: try! Shift(start: start, end: end)),
+        notificationService: NotificationService()
+      )
+    }
+    .modelContainer(PreviewSupport.inMemoryContainer())
+    .environment(AppSettings())
   }
-  .modelContainer(PreviewSupport.inMemoryContainer())
-  .environment(AppSettings())
-}
+#endif

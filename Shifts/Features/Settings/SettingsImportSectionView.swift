@@ -69,10 +69,12 @@ struct SettingsImportSectionView: View {
   }
 }
 
-#Preview {
-  Form {
-    SettingsImportSectionView()
-      .environment(AppSettings())
-      .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    Form {
+      SettingsImportSectionView()
+        .environment(AppSettings())
+        .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif

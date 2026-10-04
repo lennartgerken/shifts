@@ -46,10 +46,12 @@ struct SettingsNotificationsSectionView: View {
   }
 }
 
-#Preview {
-  Form {
-    SettingsNotificationsSectionView(notificationService: NotificationService())
-      .environment(AppSettings())
-      .modelContainer(PreviewSupport.inMemoryContainer())
+#if DEBUG
+  #Preview {
+    Form {
+      SettingsNotificationsSectionView(notificationService: NotificationService())
+        .environment(AppSettings())
+        .modelContainer(PreviewSupport.inMemoryContainer())
+    }
   }
-}
+#endif
