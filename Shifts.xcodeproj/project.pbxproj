@@ -32,7 +32,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		33F5A5973058232C000D26C3 /* Exceptions for "Shifts" folder in "Shifts" target */ = {
+		33A412E4307226CE00C887CB /* Exceptions for "Shifts" folder in "Shifts" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -50,7 +50,7 @@
 		33399C792FFCF0EE00CD1EFF /* Shifts */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				33F5A5973058232C000D26C3 /* Exceptions for "Shifts" folder in "Shifts" target */,
+				33A412E4307226CE00C887CB /* Exceptions for "Shifts" folder in "Shifts" target */,
 			);
 			path = Shifts;
 			sourceTree = "<group>";
