@@ -1,5 +1,11 @@
+import OSLog
 import SwiftData
 import SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "ShiftEditView"
+)
 
 enum ShiftEditMode {
   case add(date: Date?)
@@ -16,11 +22,13 @@ struct ShiftEditView: View {
   @Environment(\.modelContext) private var modelContext
   @Environment(\.dismiss) private var dismiss
   @Environment(AppSettings.self) private var settings
+  @Query() private var categories: [Category]
 
   @State private var sameDay = true
   @State private var day = Date()
   @State private var start = Date()
   @State private var end = Date()
+  @State private var category: Category?
   @State private var notes: String?
   @State private var tags: Set<Tag>
   @State private var useAsReference = false
@@ -57,6 +65,7 @@ struct ShiftEditView: View {
       _end = State(initialValue: shift.end)
       _notes = State(initialValue: shift.notes)
       _tags = State(initialValue: Set(shift.tags))
+      _category = State(initialValue: shift.category)
       if let shifReference = shift.shiftReference {
         _useAsReference = State(initialValue: true)
         _referenceName = State(initialValue: shifReference.name)
@@ -97,6 +106,7 @@ struct ShiftEditView: View {
           ErrorView(error: error)
         }
       }
+      CategorySelectionView(category: $category)
       Section(.titleNotes) {
         TextField(
           .labelNotes,
@@ -113,7 +123,7 @@ struct ShiftEditView: View {
         .accessibilityIdentifier("shiftEdit.notesTextField")
       }
       TagsView(tags: $tags)
-      Section(.titleUseAsReference) {
+      Section {
         Toggle(.labelUseAsReference, isOn: $useAsReference)
           .accessibilityIdentifier("shiftEdit.useAsReferenceToggle")
         if useAsReference {
@@ -138,30 +148,28 @@ struct ShiftEditView: View {
               "checkmark.arrow.trianglehead.clockwise"
           ) {
             successMessage = nil
-            Task {
-              if await save() {
-                let dateToShow = sameDay ? day : start
-                let dateFormatted = dateToShow.formatted(
-                  .dateTime.year().month().day()
-                )
-                successMessage =
-                  "\(String(localized: .successShiftSaved))\n\(dateFormatted)"
+            if save() {
+              let dateToShow = sameDay ? day : start
+              let dateFormatted = dateToShow.formatted(
+                .dateTime.year().month().day()
+              )
+              successMessage =
+                "\(String(localized: .successShiftSaved))\n\(dateFormatted)"
 
-                day = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: day
-                )!
-                start = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: start
-                )!
-                end = Calendar.current.date(
-                  byAdding: DateComponents(day: 1),
-                  to: end
-                )!
-                useAsReference = false
-                referenceName = ""
-              }
+              day = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: day
+              )!
+              start = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: start
+              )!
+              end = Calendar.current.date(
+                byAdding: DateComponents(day: 1),
+                to: end
+              )!
+              useAsReference = false
+              referenceName = ""
             }
           }
         }
@@ -172,7 +180,7 @@ struct ShiftEditView: View {
           systemImage: "checkmark"
         ) {
           Task {
-            if await save() {
+            if save() {
               dismiss()
             }
           }
@@ -192,7 +200,7 @@ struct ShiftEditView: View {
     }
   }
 
-  private func save() async -> Bool {
+  private func save() -> Bool {
     datesError = nil
     do {
       var startToSet = start
@@ -227,7 +235,8 @@ struct ShiftEditView: View {
           start: startToSet,
           end: endToSet,
           notes: notes,
-          tags: Array(tags)
+          tags: Array(tags),
+          category: category
         )
 
         if useAsReference {
@@ -240,12 +249,12 @@ struct ShiftEditView: View {
 
         modelContext.insert(shift)
 
-        if settings.sendNotifications {
+        Task {
           do {
             try await notificationService.schedule(
               for: shift, notificationTimings: settings.notificationTimings)
           } catch {
-            print("Failed to schedule notification:", error)
+            logger.error("Could not schedule notification: \(error)")
           }
         }
       } else if case .edit(let shift) = mode {
@@ -253,7 +262,8 @@ struct ShiftEditView: View {
           start: startToSet,
           end: endToSet,
           notes: notes,
-          tags: Array(tags)
+          tags: Array(tags),
+          category: category
         )
 
         if useAsReference {
@@ -269,12 +279,12 @@ struct ShiftEditView: View {
           }
         }
 
-        if settings.sendNotifications {
+        Task {
           do {
             try await notificationService.update(
               for: shift, notificationTimings: settings.notificationTimings)
           } catch {
-            print("Failed to update notification:", error)
+            logger.error("Could not update notification: \(error)")
           }
         }
       }
@@ -301,6 +311,7 @@ struct ShiftEditView: View {
       notificationService: NotificationService()
     )
   }
+  .modelContainer(PreviewSupport.inMemoryContainer())
   .environment(AppSettings())
 }
 
@@ -319,5 +330,6 @@ struct ShiftEditView: View {
       notificationService: NotificationService()
     )
   }
+  .modelContainer(PreviewSupport.inMemoryContainer())
   .environment(AppSettings())
 }

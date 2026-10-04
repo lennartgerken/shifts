@@ -24,7 +24,7 @@ struct TagListView: View {
 #Preview {
   Form {
     TagListView(
-      tags: [try! Tag(name: "Test", colorRed: 1, colorBlue: 0, colorGreen: 0)]
+      tags: [try! Tag(name: "Test", colorRGB: try! ColorRGB(red: 1, green: 0, blue: 0))]
     )
   }
 }

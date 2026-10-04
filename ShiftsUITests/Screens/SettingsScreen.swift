@@ -4,8 +4,16 @@ import XCUIAutomation
 struct SettingsScreen {
   let app: XCUIApplication
 
+  var doneButton: XCUIElement {
+    app.buttons["settings.doneButton"]
+  }
+
   var editTagsButton: XCUIElement {
     app.buttons["settings.editTagsButton"]
+  }
+
+  var editCategoriesButton: XCUIElement {
+    app.buttons["settings.editCategoriesButton"]
   }
 
   var deleteShiftReferencesButton: XCUIElement {

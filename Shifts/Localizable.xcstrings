@@ -21,6 +21,23 @@
         }
       }
     },
+    "button.addCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add category"
+          }
+        }
+      }
+    },
     "button.addEntry" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -157,6 +174,23 @@
         }
       }
     },
+    "button.deleteShifts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schichten löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete shifts"
+          }
+        }
+      }
+    },
     "button.done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -187,6 +221,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        }
+      }
+    },
+    "button.editCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit categories"
           }
         }
       }
@@ -293,6 +344,23 @@
         }
       }
     },
+    "button.keepShifts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schichten behalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep shifts"
+          }
+        }
+      }
+    },
     "button.nextMonth" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -378,13 +446,30 @@
         }
       }
     },
+    "button.selectCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select categories"
+          }
+        }
+      }
+    },
     "button.selectDate" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wähle Datum"
+            "value" : "Datum wählen"
           }
         },
         "en" : {
@@ -463,6 +548,23 @@
         }
       }
     },
+    "description.deleteCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möchtest du alle Schichten in der Kategorie %1$(name)@ löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you want to delete all shifts in the category %1$(name)@?"
+          }
+        }
+      }
+    },
     "description.enableNotifications" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -493,6 +595,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You can automatically create shifts by importing an image of a working schedule."
+          }
+        }
+      }
+    },
+    "description.noCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst eine neue Kategorie hinzufügen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can add a new category."
           }
         }
       }
@@ -782,6 +901,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$(hours)lld hour(s) before the shift"
+          }
+        }
+      }
+    },
+    "label.category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
           }
         }
       }
@@ -1415,6 +1551,23 @@
         }
       }
     },
+    "pickerValue.default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default"
+          }
+        }
+      }
+    },
     "pickerValue.hours" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1602,6 +1755,23 @@
         }
       }
     },
+    "title.addCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add category"
+          }
+        }
+      }
+    },
     "title.addPattern" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1670,6 +1840,40 @@
         }
       }
     },
+    "title.categories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories"
+          }
+        }
+      }
+    },
+    "title.deleteCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete category"
+          }
+        }
+      }
+    },
     "title.deleteShiftReferences" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1683,6 +1887,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete references"
+          }
+        }
+      }
+    },
+    "title.editCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien bearbeiten"
+          }
+        }
+      }
+    },
+    "title.editCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit category"
           }
         }
       }
@@ -1806,6 +2044,23 @@
         }
       }
     },
+    "title.noCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Kategorien"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Categories"
+          }
+        }
+      }
+    },
     "title.noPatterns" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1921,6 +2176,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "title.selectCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorien wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select categories"
           }
         }
       }

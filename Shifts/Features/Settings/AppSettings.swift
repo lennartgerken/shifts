@@ -1,11 +1,12 @@
 import Foundation
 import Observation
+import UserNotifications
 
 @Observable
 final class AppSettings {
   private enum Key {
     static let importSettings = "importSettings"
-    static let sendNotifications = "sendNotifications"
+    static let lastNotificationStatus = "lastNotificationStatus"
     static let notificationTimings = "notificationTimings"
   }
 
@@ -46,9 +47,9 @@ final class AppSettings {
     }
   }
 
-  var sendNotifications: Bool {
+  var lastNotificationStatus: Int? {
     didSet {
-      defaults.set(sendNotifications, forKey: Key.sendNotifications)
+      defaults.set(lastNotificationStatus, forKey: Key.lastNotificationStatus)
     }
   }
 
@@ -65,10 +66,6 @@ final class AppSettings {
       ]
     )
 
-    defaults.register(defaults: [
-      Key.sendNotifications: false
-    ])
-
-    self.sendNotifications = defaults.bool(forKey: Key.sendNotifications)
+    self.lastNotificationStatus = defaults.integer(forKey: Key.lastNotificationStatus)
   }
 }

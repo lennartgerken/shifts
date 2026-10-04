@@ -11,6 +11,10 @@ struct ShiftDetailsScreen {
     app.staticTexts["shiftDetails.endTextField"]
   }
 
+  var categoryTextField: XCUIElement {
+    app.staticTexts["shiftDetails.categoryText"]
+  }
+
   var notesTextField: XCUIElement {
     app.staticTexts["shiftDetails.notesTextField"]
   }

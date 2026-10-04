@@ -1,9 +1,15 @@
 import Foundation
+import OSLog
 import Observation
 import PhotosUI
 import SwiftData
 import SwiftUI
 import Vision
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "ShiftsImportViewModel"
+)
 
 enum ShiftsImportViewOverwriteShifts {
   case noOverwrite
@@ -43,6 +49,7 @@ final class ShiftsImportViewModel {
   }
   var errorMessage: String?
 
+  var category: Category?
   var overwriteShifts: ShiftsImportViewOverwriteShifts = .byTimespan
   var overwriteShiftsTimespanStart: Date = Date()
   var overwriteShiftsTimespanEnd: Date = Date()
@@ -102,40 +109,44 @@ final class ShiftsImportViewModel {
 
   func saveShifts(modelContext: ModelContext, settings: AppSettings) {
     Task {
-      do {
-        var overwriteToSet: OverwriteShifts = .noOverwrite
-        switch overwriteShifts {
-        case .noOverwrite:
-          break
-        case .byTimespan:
-          overwriteToSet = .byTimespan(
-            from: calendar.startOfDay(for: overwriteShiftsTimespanStart),
+      var overwriteToSet: OverwriteShifts = .noOverwrite
+      switch overwriteShifts {
+      case .noOverwrite:
+        break
+      case .byTimespan:
+        overwriteToSet = .byTimespan(
+          from: calendar.startOfDay(for: overwriteShiftsTimespanStart),
+          to: calendar.date(
+            byAdding: DateComponents(day: 1, minute: -1),
             to: calendar.date(
-              byAdding: DateComponents(day: 1, minute: -1),
-              to: calendar.date(
-                from: calendar.dateComponents(
-                  [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!)
-        case .byStartDay:
-          overwriteToSet = .byStartDay
-        }
+              from: calendar.dateComponents(
+                [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!)
+      case .byStartDay:
+        overwriteToSet = .byStartDay
+      }
 
-        guard let importedShifts else { return }
+      guard let importedShifts else { return }
+
+      do {
         let shiftImportResults = try await shiftsImportService.finalize(
           modelContext: modelContext,
           shifts: importedShifts,
-          overwriteShifts: overwriteToSet
+          overwriteShifts: overwriteToSet,
+          category: category
         )
         for shift in shiftImportResults.deletedShifts {
           notificationService.remove(for: shift)
         }
-        if settings.sendNotifications {
-          for shift in shiftImportResults.newShifts {
+        for shift in shiftImportResults.newShifts {
+          do {
             try await notificationService.schedule(
               for: shift, notificationTimings: settings.notificationTimings)
+          } catch {
+            logger.error("Could not schedule notification: \(error)")
           }
         }
       } catch {
-        print(error)
+        logger.error("Could not finalize import: \(error)")
       }
     }
   }

@@ -1,11 +1,12 @@
 import XCTest
 
 final class SettingsUITests: BaseUITests {
+  var calendarScreen: CalendarScreen!
   var settingsScreen: SettingsScreen!
 
   override func setUpWithError() throws {
     try super.setUpWithError()
-    let calendarScreen = CalendarScreen(app: app)
+    calendarScreen = CalendarScreen(app: app)
     settingsScreen = SettingsScreen(app: app)
 
     calendarScreen.openMenuButton.tap()
@@ -25,6 +26,52 @@ final class SettingsUITests: BaseUITests {
     XCTAssert(tagEditListScreen.tagRow(for: "Tag 2").exists)
   }
 
+  func testRemoveCategoryKeepShifts() throws {
+    let shiftDate = getDayOfMonth(day: 1)
+
+    let categoryEditListScreen = CategoryEditListScreen(app: app)
+    let categoryRow = categoryEditListScreen.categoryRow(for: "Category 1")
+    let shiftDetailsScreen = ShiftDetailsScreen(app: app)
+
+    settingsScreen.editCategoriesButton.tap()
+
+    categoryRow.swipeLeft()
+    app.buttons["Löschen"].tap()
+    categoryEditListScreen.keepShiftsButton.tap()
+    XCTAssert(!categoryRow.exists)
+
+    categoryEditListScreen.doneButton.tap()
+    settingsScreen.doneButton.tap()
+
+    calendarScreen.selectDate(shiftDate)
+    calendarScreen.dayRow(for: shiftDate).element.tap()
+
+    XCTAssert(shiftDetailsScreen.categoryTextField.label == "Kategorie, Standard")
+  }
+
+  func testRemoveCategoryDeleteShifts() throws {
+    let shiftDate = getDayOfMonth(day: 1)
+
+    let categoryEditListScreen = CategoryEditListScreen(app: app)
+    let categoryRow = categoryEditListScreen.categoryRow(for: "Category 1")
+    let shiftDetailsScreen = ShiftDetailsScreen(app: app)
+
+    settingsScreen.editCategoriesButton.tap()
+
+    categoryRow.swipeLeft()
+    app.buttons["Löschen"].tap()
+    categoryEditListScreen.deleteShiftsButton.tap()
+    XCTAssert(!categoryRow.exists)
+
+    categoryEditListScreen.doneButton.tap()
+    settingsScreen.doneButton.tap()
+
+    calendarScreen.selectDate(shiftDate)
+
+    calendarScreen.dayRow(for: shiftDate).element.tap()
+    XCTAssertFalse(shiftDetailsScreen.startTextField.exists)
+  }
+
   func testRemoveShiftReference() throws {
     let shiftReferenceEditListScreen = ShiftReferenceEditListScreen(app: app)
 
@@ -42,7 +89,6 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let timingRow = notificationTimingsListScreen.getTimingRow(value: 1, timing: .hour)
 
-    toggleNotifications()
     settingsScreen.editRemindersButton.tap()
     timingRow.swipeLeft()
     app.buttons["Löschen"].tap()
@@ -57,7 +103,6 @@ final class SettingsUITests: BaseUITests {
     let notificationTimingsListScreen = NotificationTimingsListScreen(app: app)
     let notificationTimingAddScreen = NotificationTimingAddScreen(app: app)
 
-    toggleNotifications()
     settingsScreen.editRemindersButton.tap()
     notificationTimingsListScreen.addButton.tap()
 
@@ -66,19 +111,5 @@ final class SettingsUITests: BaseUITests {
     notificationTimingAddScreen.saveButton.tap()
 
     XCTAssert(notificationTimingsListScreen.getTimingRow(value: count, timing: type).exists)
-  }
-
-  func toggleNotifications() {
-    addUIInterruptionMonitor(withDescription: "Notification Permission") { alert in
-      let allowButton = alert.buttons["Erlauben"]
-
-      if allowButton.exists {
-        allowButton.tap()
-        return true
-      }
-
-      return false
-    }
-    settingsScreen.notificationsToggle.tapToggle()
   }
 }

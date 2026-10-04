@@ -2,16 +2,13 @@ import SwiftData
 import SwiftUI
 
 struct TagSelectionView: View {
+  @Binding var selectedTags: Set<Tag>
+
   @Query(sort: \Tag.name)
   private var tags: [Tag]
   @Environment(\.modelContext) private var modelContext
-  @Binding private var selectedTags: Set<Tag>
   @State private var showAddTag: Bool = false
   @Environment(\.dismiss) private var dismiss
-
-  init(selectedTags: Binding<Set<Tag>>) {
-    self._selectedTags = selectedTags
-  }
 
   var body: some View {
     Group {
@@ -53,6 +50,7 @@ struct TagSelectionView: View {
       NavigationStack {
         TagEditView(mode: .add)
       }
+      .presentationDetents([.medium])
     }
   }
 }

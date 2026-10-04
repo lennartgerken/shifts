@@ -22,6 +22,10 @@ import SwiftData
       for shift in shifts {
         modelContext.delete(shift)
       }
+      let categories = try modelContext.fetch(FetchDescriptor<Category>())
+      for category in categories {
+        modelContext.delete(category)
+      }
 
       try modelContext.save()
     }
@@ -39,6 +43,7 @@ import SwiftData
         let endMinute: Int
         let notes: String?
         let tags: [Tag]?
+        let category: Category?
 
         init(
           day: Int,
@@ -48,7 +53,8 @@ import SwiftData
           endHour: Int,
           endMinute: Int,
           notes: String? = nil,
-          tags: [Tag] = []
+          tags: [Tag] = [],
+          category: Category? = nil
         ) {
           self.day = day
           self.startHour = startHour
@@ -58,27 +64,31 @@ import SwiftData
           self.endMinute = endMinute
           self.notes = notes
           self.tags = tags
+          self.category = category
         }
       }
 
       let tags: [Tag] = [
         try Tag(
           name: "Tag 1",
-          colorRed: 1,
-          colorBlue: 0,
-          colorGreen: 0
+          colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)
         ),
         try Tag(
           name: "Tag 2",
-          colorRed: 1,
-          colorBlue: 0,
-          colorGreen: 0
+          colorRGB: try ColorRGB(red: 1, green: 0, blue: 0)
         ),
       ]
 
       for tag in tags {
         modelContext.insert(tag)
       }
+
+      let category = try Category(
+        name: "Category 1",
+        colorRGB: try ColorRGB(red: 0, green: 1, blue: 0)
+      )
+
+      modelContext.insert(category)
 
       let shiftsToAdd = [
         ShiftToAdd(
@@ -88,7 +98,8 @@ import SwiftData
           endHour: 15,
           endMinute: 0,
           notes: "Some note",
-          tags: [tags[0]]
+          tags: [tags[0]],
+          category: category
         ),
         ShiftToAdd(
           day: 2,
@@ -131,7 +142,8 @@ import SwiftData
           start: start,
           end: end,
           notes: shiftToAdd.notes,
-          tags: shiftToAdd.tags ?? []
+          tags: shiftToAdd.tags ?? [],
+          category: shiftToAdd.category
         )
         modelContext.insert(shift)
         shifts.append(shift)
@@ -166,7 +178,6 @@ import SwiftData
         ]
       )
       settings.importSettings = importSettings
-      settings.sendNotifications = false
       settings.notificationTimings = [NotificationTiming(value: 1, timing: .hour)]
     }
   }

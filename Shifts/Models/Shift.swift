@@ -16,11 +16,14 @@ final class Shift {
 
   @Relationship(inverse: \Tag.shifts)
   private(set) var tags: [Tag] = []
-
   @Relationship(deleteRule: .cascade, inverse: \ShiftReference.shift)
   private(set) var shiftReference: ShiftReference?
+  @Relationship(inverse: \Category.shifts)
+  private(set) var category: Category?
 
-  init(start: Date, end: Date, notes: String? = nil, tags: [Tag] = []) throws {
+  init(start: Date, end: Date, notes: String? = nil, tags: [Tag] = [], category: Category? = nil)
+    throws
+  {
     try Self.checkValues(start: start, end: end, notes: notes)
 
     self.start = start
@@ -28,15 +31,18 @@ final class Shift {
     self.notes = notes
     self.tags = tags
     self.id = UUID()
+    self.category = category
   }
 
-  func updateValues(start: Date, end: Date, notes: String?, tags: [Tag]) throws {
+  func updateValues(start: Date, end: Date, notes: String?, tags: [Tag], category: Category?) throws
+  {
     try Self.checkValues(start: start, end: end, notes: notes)
 
     self.start = start
     self.end = end
     self.notes = notes
     self.tags = tags
+    self.category = category
   }
 
   private static func checkValues(start: Date, end: Date, notes: String?) throws {

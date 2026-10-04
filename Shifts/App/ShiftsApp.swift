@@ -34,7 +34,8 @@ struct Example_AppApp: App {
     notificationService = NotificationService()
 
     do {
-      modelContainer = try ModelContainer(for: Shift.self, Tag.self, ShiftReference.self)
+      modelContainer = try ModelContainer(
+        for: Shift.self, Tag.self, ShiftReference.self, Category.self)
     } catch {
       fatalError("Failed to create model container: \(error)")
     }

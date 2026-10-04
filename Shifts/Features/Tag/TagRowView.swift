@@ -10,12 +10,12 @@ struct TagRowView: View {
   var body: some View {
     HStack {
       Image(systemName: "tag")
-        .foregroundStyle(tag.color)
+        .foregroundStyle(tag.colorRGB.color)
       Text(tag.name)
     }
   }
 }
 
 #Preview {
-  TagRowView(tag: try! Tag(name: "Tag 1", colorRed: 1, colorBlue: 0, colorGreen: 0))
+  TagRowView(tag: try! Tag(name: "Tag 1", colorRGB: ColorRGB(red: 1, green: 0, blue: 0)))
 }

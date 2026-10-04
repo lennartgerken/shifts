@@ -4,36 +4,39 @@ import SwiftUI
 
 private let logger = Logger(
   subsystem: Bundle.main.bundleIdentifier!,
-  category: "TagEditView"
+  category: "CategoryEditView"
 )
 
-enum TagEditMode {
+enum CategoryEditMode {
   case add
-  case edit(tag: Tag, notificationSercice: NotificationServicing)
+  case edit(category: Category, notificationService: NotificationServicing)
 }
 
-struct TagEditView: View {
-  @State private var name: String = ""
-  @State private var color: Color = .red
-  @State private var error: String?
+struct CategoryEditView: View {
+  private let mode: CategoryEditMode
 
   @Environment(\.dismiss) private var dismiss
   @Environment(\.modelContext) private var modelContext
   @Environment(\.self) private var environment
-  @Environment(AppSettings.self) private var settings
+  @Environment(AppSettings.self) var settings
 
-  private let mode: TagEditMode
+  @State private var name: String = ""
+  @State private var color: Color = .red
+  @State private var sendNotification = false
+  @State private var error: String?
+
   private let title: String
 
-  init(mode: TagEditMode) {
+  init(mode: CategoryEditMode) {
     self.mode = mode
     switch mode {
     case .add:
-      title = String(localized: .titleAddTag)
-    case .edit(let tag, _):
-      title = String(localized: .titleEditTag)
-      self._name = State(initialValue: tag.name)
-      self._color = State(initialValue: tag.colorRGB.color)
+      title = String(localized: .titleAddCategory)
+    case .edit(let category, _):
+      title = String(localized: .titleEditCategory)
+      self._name = State(initialValue: category.name)
+      self._color = State(initialValue: category.colorRGB.color)
+      self._sendNotification = State(initialValue: category.sendNotification)
     }
   }
 
@@ -41,8 +44,11 @@ struct TagEditView: View {
     Form {
       Section {
         TextField(.labelName, text: $name)
-          .accessibilityIdentifier("tagEdit.nameTextField")
+          .accessibilityIdentifier("categoryEdit.nameTextField")
         ColorPicker(.labelColor, selection: $color, supportsOpacity: false)
+        Toggle(isOn: $sendNotification) {
+          Text(.labelSendNotifications)
+        }
       } footer: {
         if let error {
           ErrorView(error: error)
@@ -60,11 +66,13 @@ struct TagEditView: View {
       }
       ToolbarItem(placement: .confirmationAction) {
         Button(.buttonSave, systemImage: "checkmark") {
-          if save() {
-            dismiss()
+          Task {
+            if save() {
+              dismiss()
+            }
           }
         }
-        .accessibilityIdentifier("tagEdit.saveButton")
+        .accessibilityIdentifier("categoryEdit.saveButton")
       }
     }
   }
@@ -74,19 +82,20 @@ struct TagEditView: View {
       let resolvedColor = color.resolve(in: environment)
       if case .add = mode {
         try modelContext.insert(
-          Tag(
+          Category(
             name: name,
             colorRGB: try ColorRGB(
               red: Double(resolvedColor.red), green: Double(resolvedColor.green),
-              blue: Double(resolvedColor.blue))))
-      } else if case .edit(let tag, let notificationService) = mode {
-        try tag.updateValues(
+              blue: Double(resolvedColor.blue)), sendNotification: sendNotification))
+      } else if case .edit(let category, let notificationService) = mode {
+        try category.updateValues(
           name: name,
           colorRGB: try ColorRGB(
             red: Double(resolvedColor.red), green: Double(resolvedColor.green),
-            blue: Double(resolvedColor.blue)))
+            blue: Double(resolvedColor.blue)), sendNotification: sendNotification)
+
         Task {
-          for shift in tag.shifts {
+          for shift in category.shifts {
             do {
               try await notificationService.update(
                 for: shift, notificationTimings: settings.notificationTimings)
@@ -98,7 +107,7 @@ struct TagEditView: View {
       }
 
       return true
-    } catch TagCreationError.emptyName {
+    } catch CategoryCreationError.emptyName {
       self.error = String(localized: .errorEmptyName)
     } catch ColorRGBError.invalidColor {
       self.error = String(localized: .errorInvalidColor)
@@ -111,15 +120,17 @@ struct TagEditView: View {
 
 #Preview("Add") {
   NavigationStack {
-    TagEditView(mode: .add)
+    CategoryEditView(mode: .add)
   }
 }
 
 #Preview("Edit") {
   NavigationStack {
-    TagEditView(
+    CategoryEditView(
       mode: .edit(
-        tag: try! Tag(name: "Some tag", colorRGB: ColorRGB(red: 0, green: 1, blue: 1)),
-        notificationSercice: NotificationService()))
+        category: try! Category(
+          name: "Some category", colorRGB: ColorRGB(red: 0, green: 1, blue: 1)),
+        notificationService: NotificationService())
+    )
   }
 }

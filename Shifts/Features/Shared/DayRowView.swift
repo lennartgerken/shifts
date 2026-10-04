@@ -39,18 +39,22 @@ struct DayRowView: View {
           Spacer()
           ShiftInfoView(shifts: day.shifts)
         }
-        VStack {
+        VStack(alignment: .leading) {
           ForEach(day.shifts) { shift in
             let start = shift.start < day.dateInterval.start ? day.dateInterval.start : shift.start
             let end =
               shift.end >= day.dateInterval.end
               ? Calendar.current.date(byAdding: .minute, value: -1, to: day.dateInterval.end)!
               : shift.end
-            HStack {
-              Text(start, format: .dateTime.hour().minute())
-
-              Image(systemName: "arrow.right")
-              Text(end, format: .dateTime.hour().minute())
+            HStack(spacing: 3) {
+              Image(systemName: "circle.fill")
+                .foregroundStyle(shift.category?.colorRGB.color ?? .primary)
+                .font(.system(size: 10))
+              HStack {
+                Text(start, format: .dateTime.hour().minute())
+                Image(systemName: "arrow.right")
+                Text(end, format: .dateTime.hour().minute())
+              }
             }
           }
         }
