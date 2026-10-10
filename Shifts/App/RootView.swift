@@ -15,6 +15,8 @@ struct RootView: View {
   @Environment(\.modelContext) private var modelContext
   @Environment(AppSettings.self) private var settings
 
+  @State private var export: ShiftPileExport?
+
   var body: some View {
     CalendarView(shiftsImportService: shiftsImportService, notificationService: notificationService)
       .onChange(of: scenePhase) { _, newPhase in
@@ -33,6 +35,28 @@ struct RootView: View {
             }
             settings.lastNotificationStatus = await notificationService.authorizationStatus()
               .rawValue
+          }
+        }
+      }
+      .onOpenURL { url in
+        do {
+          let data = try Data(contentsOf: url)
+          export = try JSONDecoder().decode(ShiftPileExport.self, from: data)
+        } catch {
+          print(error)
+        }
+      }
+      .sheet(
+        isPresented: Binding(
+          get: { export != nil },
+          set: { if !$0 { export = nil } }
+        )
+      ) {
+        if let export {
+          NavigationStack {
+            ShiftsImportView(
+              export: export, shiftsImportService: shiftsImportService,
+              notificationService: notificationService)
           }
         }
       }

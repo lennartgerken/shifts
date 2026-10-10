@@ -54,7 +54,20 @@ final class ShiftsImportViewModel {
   var overwriteShiftsTimespanStart: Date = Date()
   var overwriteShiftsTimespanEnd: Date = Date()
 
-  init(shiftsImportService: ShiftsImportServicing, notificationService: NotificationServicing) {
+  init(
+    export: ShiftPileExport? = nil, shiftsImportService: ShiftsImportServicing,
+    notificationService: NotificationServicing
+  ) {
+    if let export {
+      self.importedShifts = export.shifts.map({ shiftExport in
+        ParsedShift(start: shiftExport.start, end: shiftExport.end)
+      })
+      if let firstShiftExport = export.shifts.first {
+        let interval = calendar.dateInterval(of: .month, for: firstShiftExport.start)!
+        overwriteShiftsTimespanStart = interval.start
+        overwriteShiftsTimespanEnd = calendar.date(byAdding: .minute, value: -1, to: interval.end)!
+      }
+    }
     self.shiftsImportService = shiftsImportService
     self.notificationService = notificationService
   }

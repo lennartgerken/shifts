@@ -13,10 +13,12 @@ struct ShiftsImportView: View {
   @Environment(\.isUITesting) private var isUITesting
 
   init(
+    export: ShiftPileExport? = nil,
     shiftsImportService: ShiftsImportServicing,
     notificationService: NotificationServicing
   ) {
     self.viewModel = ShiftsImportViewModel(
+      export: export,
       shiftsImportService: shiftsImportService,
       notificationService: notificationService
     )
