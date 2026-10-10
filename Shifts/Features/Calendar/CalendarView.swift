@@ -161,7 +161,6 @@ struct CalendarView: View {
       .sheet(isPresented: $showShare) {
         NavigationStack {
           ShareView()
-            .presentationDetents([.medium])
         }
       }
       .sheet(isPresented: $showSettings) {
