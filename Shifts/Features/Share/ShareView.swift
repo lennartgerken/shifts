@@ -6,8 +6,8 @@ struct ShareView: View {
   @Query(sort: \Category.name) private var categories: [Category]
 
   @State private var category: Category? = nil
-  @State private var from: Date = Date()
-  @State private var to: Date = Date()
+  @State private var from: Date
+  @State private var to: Date
   private var shiftsToExport: [Shift] {
     do {
       var predicate: Predicate<Shift>
@@ -33,6 +33,13 @@ struct ShareView: View {
     }
     return []
   }
+
+  init() {
+    let interval = Calendar.current.dateInterval(of: .month, for: Date())!
+    self.from = interval.start
+    self.to = Calendar.current.date(byAdding: .minute, value: -1, to: interval.end)!
+  }
+
   var body: some View {
     List {
       Section {
@@ -58,7 +65,12 @@ struct ShareView: View {
           item: ShiftPileExport(
             shifts: shiftsToExport.map({ shift in
               shiftExport(start: shift.start, end: shift.end)
-            })), preview: SharePreview(.shareTitleShifts))
+            })),
+          preview: SharePreview(
+            .shareTitleShifts(
+              from: from.formatted(.dateTime.month().year().day()),
+              to: to.formatted(.dateTime.month().year().day())),
+            image: Image(systemName: "calendar.badge.clock")))
       }
       if shiftsToExport.count > 0 {
         Section(.titlePreview) {

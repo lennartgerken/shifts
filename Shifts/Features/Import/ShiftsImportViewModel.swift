@@ -53,6 +53,7 @@ final class ShiftsImportViewModel {
   var overwriteShifts: ShiftsImportViewOverwriteShifts = .byTimespan
   var overwriteShiftsTimespanStart: Date = Date()
   var overwriteShiftsTimespanEnd: Date = Date()
+  var overwriteAllCategories = false
 
   init(
     export: ShiftPileExport? = nil, shiftsImportService: ShiftsImportServicing,
@@ -133,9 +134,10 @@ final class ShiftsImportViewModel {
             byAdding: DateComponents(day: 1, minute: -1),
             to: calendar.date(
               from: calendar.dateComponents(
-                [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!)
+                [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!,
+          overwriteAllCategories: overwriteAllCategories)
       case .byStartDay:
-        overwriteToSet = .byStartDay
+        overwriteToSet = .byStartDay(overwriteAllCategories: overwriteAllCategories)
       }
 
       guard let importedShifts else { return }

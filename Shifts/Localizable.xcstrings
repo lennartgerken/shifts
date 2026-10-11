@@ -1126,6 +1126,23 @@
         }
       }
     },
+    "label.overwriteAllCategories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Kategorien überschreiben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overwrite all categories"
+          }
+        }
+      }
+    },
     "label.overwriteShifts" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1744,13 +1761,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schichten"
+            "value" : "Schichten %1$(from)@ - %2$(to)@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shifts"
+            "value" : "Shifts %1$(from)@ - %2$(to)@"
           }
         }
       }

@@ -51,6 +51,9 @@ struct ShiftsImportView: View {
                   displayedComponents: [.date]
                 )
               }
+              Toggle(isOn: $viewModel.overwriteAllCategories) {
+                Text(.labelOverwriteAllCategories)
+              }
             }
             Section {
               ForEach(importedDays) { day in
