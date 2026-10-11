@@ -67,10 +67,8 @@ struct ShareView: View {
               shiftExport(start: shift.start, end: shift.end)
             })),
           preview: SharePreview(
-            .shareTitleShifts(
-              from: from.formatted(.dateTime.month().year().day()),
-              to: to.formatted(.dateTime.month().year().day())),
-            image: Image(systemName: "calendar.badge.clock")))
+            "\(from.formatted(.dateTime.month().year().day())) - \(to.formatted(.dateTime.month().year().day()))",
+            image: Image("ShareIcon")))
       }
       if shiftsToExport.count > 0 {
         Section(.titlePreview) {
