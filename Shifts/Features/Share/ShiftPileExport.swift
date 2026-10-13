@@ -16,15 +16,15 @@ struct ShiftPileExport: Codable, Sendable, Transferable {
   static let currentVersion = 1
 
   let version: Int
-  let shifts: [shiftExport]
+  let shifts: [ShiftExport]
 
-  init(shifts: [shiftExport]) {
+  init(shifts: [ShiftExport]) {
     self.version = Self.currentVersion
     self.shifts = shifts
   }
 }
 
-struct shiftExport: Codable, Sendable {
+struct ShiftExport: Codable, Sendable {
   let start: Date
   let end: Date
 }

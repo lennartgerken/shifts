@@ -129,6 +129,7 @@ struct CalendarView: View {
             Button(.buttonShareShifts, systemImage: "square.and.arrow.up") {
               showShare = true
             }
+            .accessibilityIdentifier("calendar.shareButton")
             Button(
               .buttonSettings,
               systemImage: "gearshape"

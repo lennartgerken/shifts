@@ -1,8 +1,16 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "ShareView"
+)
+
 struct ShareView: View {
   @Environment(\.modelContext) private var modelContext
+  @Environment(\.dismiss) private var dismiss
+  @Environment(\.isUITesting) private var isUITesting
   @Query(sort: \Category.name) private var categories: [Category]
 
   @State private var category: Category? = nil
@@ -33,6 +41,14 @@ struct ShareView: View {
     }
     return []
   }
+  private var export: ShiftPileExport {
+    ShiftPileExport(
+      shifts: shiftsToExport.map({ shift in
+        ShiftExport(start: shift.start, end: shift.end)
+      }))
+  }
+
+  @State private var exportBase64: String?
 
   init() {
     let interval = Calendar.current.dateInterval(of: .month, for: Date())!
@@ -61,14 +77,30 @@ struct ShareView: View {
         )
       }
       Section {
-        ShareLink(
-          item: ShiftPileExport(
-            shifts: shiftsToExport.map({ shift in
-              shiftExport(start: shift.start, end: shift.end)
-            })),
-          preview: SharePreview(
-            "\(from.formatted(.dateTime.month().year().day())) - \(to.formatted(.dateTime.month().year().day()))",
-            image: Image("ShareIcon")))
+        if !isUITesting {
+          ShareLink(
+            item: export,
+            preview: SharePreview(
+              "\(from.formatted(.dateTime.month().year().day())) - \(to.formatted(.dateTime.month().year().day()))",
+              image: Image("ShareIcon")))
+        } else {
+          Button(.buttonShare) {
+            Task {
+              do {
+                let data = try await export.exported(as: .shiftPile)
+                exportBase64 = data.base64EncodedString()
+              } catch {
+                logger.error("Could not create exported shifts: \(error)")
+              }
+            }
+          }
+          .accessibilityIdentifier("share.shareButton")
+          if let exportBase64 {
+            Text(exportBase64)
+              .accessibilityIdentifier("share.base64Text")
+              .accessibilityValue(exportBase64)
+          }
+        }
       }
       if shiftsToExport.count > 0 {
         Section(.titlePreview) {
@@ -79,6 +111,13 @@ struct ShareView: View {
       }
     }
     .navigationTitle(.titleShareShifts)
+    .toolbar {
+      ToolbarItem(placement: .confirmationAction) {
+        Button(.buttonDone, systemImage: "checkmark") {
+          dismiss()
+        }
+      }
+    }
   }
 }
 

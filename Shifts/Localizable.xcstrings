@@ -542,6 +542,23 @@
         }
       }
     },
+    "button.share" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share"
+          }
+        }
+      }
+    },
     "button.shareShifts" : {
       "extractionState" : "manual",
       "localizations" : {
