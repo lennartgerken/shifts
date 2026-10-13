@@ -2,8 +2,6 @@ import SwiftUI
 
 struct NotificationTimingsListView: View {
   @Binding var notificationTimings: Set<NotificationTiming>
-
-  @Environment(\.dismiss) private var dismiss
   @State private var showAddView = false
   private var notificationTimingsArray: [NotificationTiming] {
     Array(notificationTimings).sorted()
@@ -52,20 +50,14 @@ struct NotificationTimingsListView: View {
         )
       }
     }
-    .navigationTitle(.titleEditReminders)
-    .navigationBarTitleDisplayMode(.inline)
+    .navigationTitle(.titleReminders)
     .toolbar {
       if notificationTimings.count < 5 {
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItem(placement: .topBarTrailing) {
           Button(.buttonAddReminder, systemImage: "plus") {
             showAddView = true
           }
           .accessibilityIdentifier("notificationTimingsList.addButton")
-        }
-      }
-      ToolbarItem(placement: .confirmationAction) {
-        Button(.buttonDone, systemImage: "checkmark") {
-          dismiss()
         }
       }
     }

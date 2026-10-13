@@ -11,7 +11,6 @@ struct TagEditListView: View {
   let notificationService: NotificationServicing
 
   @Environment(\.modelContext) private var modelContext
-  @Environment(\.dismiss) private var dismiss
   @Environment(AppSettings.self) private var settings
   @Query(sort: \Tag.name) private var tags: [Tag]
   @State private var tagToEdit: Tag? = nil
@@ -55,16 +54,11 @@ struct TagEditListView: View {
           .titleNoTags, systemImage: "tag", description: Text(.descriptionNoTags))
       }
     }
-    .navigationTitle(.titleEditTags)
+    .navigationTitle(.titleTags)
     .toolbar {
-      ToolbarItem(placement: .topBarLeading) {
+      ToolbarItem(placement: .topBarTrailing) {
         Button(.buttonAddTag, systemImage: "plus") {
           showAddTag = true
-        }
-      }
-      ToolbarItem(placement: .confirmationAction) {
-        Button(.buttonDone, systemImage: "checkmark") {
-          dismiss()
         }
       }
     }
@@ -88,6 +82,7 @@ struct TagEditListView: View {
     NavigationStack {
       TagEditListView(notificationService: NotificationService())
         .modelContainer(PreviewSupport.inMemoryContainer())
+        .environment(AppSettings())
     }
   }
 #endif

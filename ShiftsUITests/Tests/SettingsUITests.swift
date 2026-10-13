@@ -40,7 +40,7 @@ final class SettingsUITests: BaseUITests {
     categoryEditListScreen.keepShiftsButton.tap()
     XCTAssert(!categoryRow.exists)
 
-    categoryEditListScreen.doneButton.tap()
+    app.buttons["BackButton"].tap()
     settingsScreen.doneButton.tap()
 
     calendarScreen.selectDate(shiftDate)
@@ -63,7 +63,7 @@ final class SettingsUITests: BaseUITests {
     categoryEditListScreen.deleteShiftsButton.tap()
     XCTAssert(!categoryRow.exists)
 
-    categoryEditListScreen.doneButton.tap()
+    app.buttons["BackButton"].tap()
     settingsScreen.doneButton.tap()
 
     calendarScreen.selectDate(shiftDate)

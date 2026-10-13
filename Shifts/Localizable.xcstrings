@@ -304,6 +304,23 @@
         }
       }
     },
+    "button.importSettings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importeinstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import settings"
+          }
+        }
+      }
+    },
     "button.importShifts" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1919,40 +1936,6 @@
         }
       }
     },
-    "title.deleteShiftReferences" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Referenzen löschen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete references"
-          }
-        }
-      }
-    },
-    "title.editCategories" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorien bearbeiten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorien bearbeiten"
-          }
-        }
-      }
-    },
     "title.editCategory" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1983,23 +1966,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit pattern"
-          }
-        }
-      }
-    },
-    "title.editReminders" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erinnerungen bearbeiten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit reminders"
           }
         }
       }
@@ -2038,23 +2004,6 @@
         }
       }
     },
-    "title.editTags" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tags bearbeiten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit tags"
-          }
-        }
-      }
-    },
     "title.enableNotifications" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2068,6 +2017,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "title.importSettings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importeinstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import settings"
           }
         }
       }
@@ -2238,6 +2204,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Preview"
+          }
+        }
+      }
+    },
+    "title.reminders" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders"
           }
         }
       }
