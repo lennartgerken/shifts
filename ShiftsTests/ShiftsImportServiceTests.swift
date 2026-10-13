@@ -44,14 +44,19 @@ struct ShiftsImportServiceTests {
         from: DateComponents(year: 2026, month: 1, day: 3, hour: 15, minute: 30))!
     ),
   ]
+  let category: Shifts.Category
   let existingShift1: Shift
   let existingShift2: Shift
+  let existingShift3: Shift
+  let existingShift4: Shift
   let modelContainer: ModelContainer
   let modelContext: ModelContext
   let shiftsImportService: ShiftsImportServicing
   let importSettings: ImportSettings
 
   init() throws {
+    category = try Shifts.Category(
+      name: "Category", colorRGB: try ColorRGB(red: 1, green: 0, blue: 0))
     existingShift1 = try Shift(
       start: Calendar.current.date(
         from: DateComponents(year: 2026, month: 1, day: 1, hour: 8, minute: 0))!,
@@ -64,7 +69,22 @@ struct ShiftsImportServiceTests {
       end: Calendar.current.date(
         from: DateComponents(year: 2026, month: 1, day: 31, hour: 12, minute: 0))!
     )
-    modelContainer = try getModelContainerWith(shifts: [existingShift1, existingShift2])
+    existingShift3 = try Shift(
+      start: Calendar.current.date(
+        from: DateComponents(year: 2026, month: 1, day: 1, hour: 13, minute: 0))!,
+      end: Calendar.current.date(
+        from: DateComponents(year: 2026, month: 1, day: 1, hour: 15, minute: 0))!,
+      category: category
+    )
+    existingShift4 = try Shift(
+      start: Calendar.current.date(
+        from: DateComponents(year: 2026, month: 1, day: 31, hour: 13, minute: 0))!,
+      end: Calendar.current.date(
+        from: DateComponents(year: 2026, month: 1, day: 31, hour: 15, minute: 0))!,
+      category: category
+    )
+    modelContainer = try getModelContainerWith(
+      categories: [category], shifts: [existingShift1, existingShift2])
     modelContext = modelContainer.mainContext
     shiftsImportService = ShiftsImportService(
       textRecognitionService: FakeTextRecognitionService(),
@@ -92,7 +112,7 @@ struct ShiftsImportServiceTests {
     let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
 
     #expect(shiftImportResults.newShifts.count == parsedShifts.count)
-    #expect(fetchedShifts.count == parsedShifts.count + 1)
+    #expect(fetchedShifts.count == parsedShifts.count + 2)
     for parsedShift in parsedShifts {
       #expect(
         shiftImportResults.newShifts.contains(where: {
@@ -107,9 +127,57 @@ struct ShiftsImportServiceTests {
       fetchedShifts.contains(where: {
         $0.start == existingShift2.start && $0.end == existingShift2.end
       }))
+    #expect(
+      fetchedShifts.contains(where: {
+        $0.start == existingShift4.start && $0.end == existingShift4.end
+      }))
+
+    #expect(shiftImportResults.deletedShifts.count == 2)
+    #expect(shiftImportResults.deletedShifts.contains(existingShift1))
+    #expect(shiftImportResults.deletedShifts.contains(existingShift3))
+  }
+
+  @Test func overrideByStartDayCategory() async throws {
+    let parsedShifts = try await shiftsImportService.importShifts(
+      from: try getCGImage(fromResource: "schedule", withExtension: "png"),
+      importSettings: ImportSettingsValidated(settings: importSettings))
+    let shiftImportResults = try await shiftsImportService.finalize(
+      modelContext: modelContext, shifts: parsedShifts,
+      overwriteShifts: .byStartDay(overwriteAllCategories: false), category: category)
+
+    let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
+
+    #expect(shiftImportResults.newShifts.count == parsedShifts.count)
+    #expect(fetchedShifts.count == parsedShifts.count + 3)
+    for parsedShift in parsedShifts {
+      #expect(
+        shiftImportResults.newShifts.contains(where: {
+          $0.start == parsedShift.start && $0.end == parsedShift.end
+        }))
+      #expect(
+        fetchedShifts.contains(where: {
+          $0.start == parsedShift.start && $0.end == parsedShift.end
+        }))
+    }
+    #expect(
+      fetchedShifts.contains(where: {
+        $0.start == existingShift1.start && $0.end == existingShift1.end
+      }))
+    #expect(
+      fetchedShifts.contains(where: {
+        $0.start == existingShift2.start && $0.end == existingShift2.end
+      }))
+    #expect(
+      fetchedShifts.contains(where: {
+        $0.start == existingShift4.start && $0.end == existingShift4.end
+      }))
+
+    for shift in shiftImportResults.deletedShifts {
+      print(shift.start)
+    }
 
     #expect(shiftImportResults.deletedShifts.count == 1)
-    #expect(shiftImportResults.deletedShifts.contains(existingShift1))
+    #expect(shiftImportResults.deletedShifts.contains(existingShift3))
   }
 
   @Test func overrideByTimespan() async throws {
@@ -140,16 +208,51 @@ struct ShiftsImportServiceTests {
         }))
     }
 
-    #expect(shiftImportResults.deletedShifts.count == 2)
+    #expect(shiftImportResults.deletedShifts.count == 4)
     #expect(shiftImportResults.deletedShifts.contains(existingShift1))
     #expect(shiftImportResults.deletedShifts.contains(existingShift2))
+    #expect(shiftImportResults.deletedShifts.contains(existingShift3))
+    #expect(shiftImportResults.deletedShifts.contains(existingShift4))
+  }
+
+  @Test func overrideByTimespanCategory() async throws {
+    let parsedShifts = try await shiftsImportService.importShifts(
+      from: try getCGImage(fromResource: "schedule", withExtension: "png"),
+      importSettings: ImportSettingsValidated(settings: importSettings))
+    let shiftImportResults = try await shiftsImportService.finalize(
+      modelContext: modelContext, shifts: parsedShifts,
+      overwriteShifts: .byTimespan(
+        from: Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 1))!,
+        to: Calendar.current.date(
+          from: DateComponents(year: 2026, month: 1, day: 31, hour: 23, minute: 59))!,
+        overwriteAllCategories: false),
+      category: category)
+
+    let fetchedShifts = try modelContext.fetch(FetchDescriptor<Shift>())
+
+    #expect(shiftImportResults.newShifts.count == parsedShifts.count)
+    #expect(fetchedShifts.count == parsedShifts.count + 2)
+    for parsedShift in parsedShifts {
+      #expect(
+        shiftImportResults.newShifts.contains(where: {
+          $0.start == parsedShift.start && $0.end == parsedShift.end
+        }))
+      #expect(
+        fetchedShifts.contains(where: {
+          $0.start == parsedShift.start && $0.end == parsedShift.end
+        }))
+    }
+
+    #expect(shiftImportResults.deletedShifts.count == 2)
+    #expect(shiftImportResults.deletedShifts.contains(existingShift3))
+    #expect(shiftImportResults.deletedShifts.contains(existingShift4))
   }
 
   @Test func noOverride() async throws {
     let allShifts =
       parsedShifts.map({ parsedShift in
         try! Shift(start: parsedShift.start, end: parsedShift.end)
-      }) + [existingShift1, existingShift2]
+      }) + [existingShift1, existingShift2, existingShift3, existingShift4]
 
     let parsedShifts = try await shiftsImportService.importShifts(
       from: try getCGImage(fromResource: "schedule", withExtension: "png"),
