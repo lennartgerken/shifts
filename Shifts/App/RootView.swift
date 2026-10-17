@@ -38,12 +38,29 @@ struct RootView: View {
           }
         }
       }
-      .onOpenURL { url in
+      .onOpenURL { openedURL in
+        let urlToUse: URL
+        if openedURL.scheme == "shiftpile",
+          openedURL.host == "import-test"
+        {
+          guard
+            let url = Bundle.main.url(
+              forResource: "sample-export",
+              withExtension: "json"
+            )
+          else {
+            assertionFailure("Test fixture not found")
+            return
+          }
+          urlToUse = url
+        } else {
+          urlToUse = openedURL
+        }
         do {
-          let data = try Data(contentsOf: url)
+          let data = try Data(contentsOf: urlToUse)
           export = try JSONDecoder().decode(ShiftPileExport.self, from: data)
         } catch {
-          print(error)
+          logger.error("Could not import file: \(error)")
         }
       }
       .sheet(
