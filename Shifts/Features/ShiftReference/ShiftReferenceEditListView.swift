@@ -1,10 +1,9 @@
+import SwiftData
 import SwiftUI
-import _SwiftData_SwiftUI
 
 struct ShiftReferenceEditListView: View {
   @Query private var shiftReferences: [ShiftReference]
   @Environment(\.modelContext) private var modelContext
-  @Environment(\.dismiss) private var dismiss
 
   var body: some View {
     Group {
@@ -54,14 +53,7 @@ struct ShiftReferenceEditListView: View {
         )
       }
     }
-    .navigationTitle(.titleDeleteShiftReferences)
-    .toolbar {
-      ToolbarItem(placement: .confirmationAction) {
-        Button(.buttonDone, systemImage: "checkmark") {
-          dismiss()
-        }
-      }
-    }
+    .navigationTitle(.titleShiftReferences)
   }
 }
 

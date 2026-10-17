@@ -4,8 +4,8 @@ import Vision
 
 enum OverwriteShifts {
   case noOverwrite
-  case byTimespan(from: Date, to: Date)
-  case byStartDay
+  case byTimespan(from: Date, to: Date, overwriteAllCategories: Bool)
+  case byStartDay(overwriteAllCategories: Bool)
 }
 
 protocol ShiftsImportServicing {
@@ -60,30 +60,64 @@ struct ShiftsImportService: ShiftsImportServicing {
     var deletedShifts: [Shift] = []
     var newShifts: [Shift] = []
 
-    if case .byStartDay = overwriteShifts {
+    if case .byStartDay(let overwriteAllCategories) = overwriteShifts {
       for parsedShift in parsedShifts {
         let startOfStartDate = calendar.startOfDay(for: parsedShift.start)
         let endOfStartDate = calendar.date(
           byAdding: DateComponents(day: 1, minute: -1),
           to: startOfStartDate
         )!
-        let descriptor = FetchDescriptor<Shift>(
-          predicate: #Predicate { shift in
+
+        var predicate: Predicate<Shift>
+        if overwriteAllCategories {
+          predicate = #Predicate { shift in
             shift.start >= startOfStartDate && shift.start <= endOfStartDate
           }
-        )
-        for shift in try modelContext.fetch(descriptor) {
+        } else {
+          if let category {
+            let categoryID = category.persistentModelID
+            predicate = #Predicate<Shift> { shift in
+              shift.category?.persistentModelID == categoryID && shift.start >= startOfStartDate
+                && shift.start <= endOfStartDate
+            }
+          } else {
+            predicate = #Predicate<Shift> { shift in
+              shift.category == nil && shift.start >= startOfStartDate
+                && shift.start <= endOfStartDate
+            }
+          }
+        }
+
+        for shift in try modelContext.fetch(FetchDescriptor<Shift>(predicate: predicate)) {
           modelContext.delete(shift)
           deletedShifts.append(shift)
         }
       }
-    } else if case .byTimespan(let from, let to) = overwriteShifts {
-      let descriptor = FetchDescriptor<Shift>(
-        predicate: #Predicate { shift in
+    } else if case .byTimespan(let from, let to, let overwriteAllCategories) = overwriteShifts {
+      var predicate: Predicate<Shift>
+      if overwriteAllCategories {
+        predicate = #Predicate { shift in
           shift.start > from && shift.start <= to
         }
-      )
-      for shift in try modelContext.fetch(descriptor) {
+      } else {
+        if let category {
+          let categoryID = category.persistentModelID
+          predicate = #Predicate<Shift> { shift in
+            shift.category?.persistentModelID == categoryID && shift.start > from
+              && shift.start <= to
+          }
+        } else {
+          predicate = #Predicate<Shift> { shift in
+            shift.category == nil && shift.start > from && shift.start <= to
+          }
+        }
+      }
+
+      for shift in try modelContext.fetch(
+        FetchDescriptor<Shift>(
+          predicate: predicate
+        ))
+      {
         modelContext.delete(shift)
         deletedShifts.append(shift)
       }

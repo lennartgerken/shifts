@@ -3,10 +3,6 @@ import XCUIAutomation
 struct CategoryEditListScreen {
   let app: XCUIApplication
 
-  var doneButton: XCUIElement {
-    app.buttons["categoryEditList.doneButton"]
-  }
-
   var keepShiftsButton: XCUIElement {
     app.buttons["categoryEditList.keepShiftsButton"].firstMatch
   }

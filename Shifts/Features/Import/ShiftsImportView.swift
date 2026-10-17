@@ -13,10 +13,12 @@ struct ShiftsImportView: View {
   @Environment(\.isUITesting) private var isUITesting
 
   init(
+    export: ShiftPileExport? = nil,
     shiftsImportService: ShiftsImportServicing,
     notificationService: NotificationServicing
   ) {
     self.viewModel = ShiftsImportViewModel(
+      export: export,
       shiftsImportService: shiftsImportService,
       notificationService: notificationService
     )
@@ -24,8 +26,8 @@ struct ShiftsImportView: View {
 
   var body: some View {
     Group {
-      if let importedDays = viewModel.importedDays {
-        if !importedDays.isEmpty {
+      if let importedShifts = viewModel.importedShifts {
+        if !importedShifts.isEmpty {
           List {
             CategorySelectionView(category: $viewModel.category)
             Section {
@@ -49,14 +51,12 @@ struct ShiftsImportView: View {
                   displayedComponents: [.date]
                 )
               }
+              Toggle(isOn: $viewModel.overwriteAllCategories) {
+                Text(.labelOverwriteAllCategories)
+              }
             }
             Section {
-              ForEach(importedDays) { day in
-                DayRowView(day: day, style: .fullDate)
-                  .accessibilityIdentifier(
-                    "shiftsImport.dayRow-\(day.id.formatted(.iso8601.year().month().day()))"
-                  )
-              }
+              ParsedShiftListView(parsedShifts: importedShifts)
             }
           }
         } else {
@@ -146,7 +146,7 @@ struct ShiftsImportView: View {
           dismiss()
         }
       }
-      if let shifts = viewModel.importedDays, !shifts.isEmpty {
+      if let shifts = viewModel.importedShifts, !shifts.isEmpty {
         ToolbarItem(placement: .confirmationAction) {
           Button(.buttonSave, systemImage: "checkmark") {
             viewModel.saveShifts(modelContext: modelContext, settings: settings)

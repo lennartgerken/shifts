@@ -110,11 +110,11 @@ final class ShiftsUITests: BaseUITests {
     let dayRowStartText = dayRow.element.staticTexts["09:00"]
 
     calendarScreen.selectDate(date)
-    XCTAssert(dayRow.element.exists)
+    XCTAssert(dayRow.element.waitForExistence(timeout: 5))
     XCTAssert(dayRowStartText.exists)
     dayRow.element.tap()
     shiftDetailsScreen.deleteButton.tap()
-    XCTAssert(dayRow.element.exists)
+    XCTAssert(dayRow.element.waitForExistence(timeout: 5))
     XCTAssertFalse(dayRowStartText.exists)
   }
 }

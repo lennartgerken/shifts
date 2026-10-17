@@ -11,6 +11,7 @@ struct CalendarView: View {
   @State private var start: Date
   @State private var showAddShift = false
   @State private var showImport = false
+  @State private var showShare = false
   @State private var showSettings = false
   @State private var showDateSelection = false
   @State private var selectedDate: Date
@@ -125,6 +126,10 @@ struct CalendarView: View {
               showImport = true
             }
             .accessibilityIdentifier("calendar.importShiftsButton")
+            Button(.buttonShareShifts, systemImage: "square.and.arrow.up") {
+              showShare = true
+            }
+            .accessibilityIdentifier("calendar.shareButton")
             Button(
               .buttonSettings,
               systemImage: "gearshape"
@@ -152,6 +157,11 @@ struct CalendarView: View {
             shiftsImportService: shiftsImportService,
             notificationService: notificationService
           )
+        }
+      }
+      .sheet(isPresented: $showShare) {
+        NavigationStack {
+          ShareView()
         }
       }
       .sheet(isPresented: $showSettings) {

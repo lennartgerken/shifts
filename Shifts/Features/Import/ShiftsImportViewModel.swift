@@ -26,35 +26,28 @@ final class ShiftsImportViewModel {
 
   var isLoading: Bool = false
   var importedShifts: [ParsedShift]?
-  var importedDays: [Day]? {
-    guard let parsedShifts = importedShifts else { return nil }
-
-    var dates: Set<Date> = []
-    for parsedShift in parsedShifts {
-      let start = calendar.startOfDay(for: parsedShift.start)
-      let end = calendar.startOfDay(for: parsedShift.end)
-      dates.insert(start)
-      dates.insert(end)
-    }
-
-    let shifts = parsedShifts.compactMap({ parsedShift in
-      try? Shift(start: parsedShift.start, end: parsedShift.end)
-    })
-
-    return dates.map { date in
-      Day(date: date, shifts: shifts)
-    }.sorted { day1, day2 in
-      day1.dateInterval.start < day2.dateInterval.start
-    }
-  }
   var errorMessage: String?
 
   var category: Category?
   var overwriteShifts: ShiftsImportViewOverwriteShifts = .byTimespan
   var overwriteShiftsTimespanStart: Date = Date()
   var overwriteShiftsTimespanEnd: Date = Date()
+  var overwriteAllCategories = false
 
-  init(shiftsImportService: ShiftsImportServicing, notificationService: NotificationServicing) {
+  init(
+    export: ShiftPileExport? = nil, shiftsImportService: ShiftsImportServicing,
+    notificationService: NotificationServicing
+  ) {
+    if let export {
+      self.importedShifts = export.shifts.map({ shiftExport in
+        ParsedShift(start: shiftExport.start, end: shiftExport.end)
+      })
+      if let firstShiftExport = export.shifts.first {
+        let interval = calendar.dateInterval(of: .month, for: firstShiftExport.start)!
+        overwriteShiftsTimespanStart = interval.start
+        overwriteShiftsTimespanEnd = calendar.date(byAdding: .minute, value: -1, to: interval.end)!
+      }
+    }
     self.shiftsImportService = shiftsImportService
     self.notificationService = notificationService
   }
@@ -120,9 +113,10 @@ final class ShiftsImportViewModel {
             byAdding: DateComponents(day: 1, minute: -1),
             to: calendar.date(
               from: calendar.dateComponents(
-                [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!)
+                [.year, .month, .day], from: overwriteShiftsTimespanEnd))!)!,
+          overwriteAllCategories: overwriteAllCategories)
       case .byStartDay:
-        overwriteToSet = .byStartDay
+        overwriteToSet = .byStartDay(overwriteAllCategories: overwriteAllCategories)
       }
 
       guard let importedShifts else { return }

@@ -11,7 +11,6 @@ struct CategoryEditListView: View {
   let notificationService: NotificationServicing
 
   @Environment(\.modelContext) private var modelContext
-  @Environment(\.dismiss) private var dismiss
   @Environment(AppSettings.self) private var settings
   @Query private var categories: [Category]
 
@@ -28,6 +27,8 @@ struct CategoryEditListView: View {
               editCategory = category
             } label: {
               CategoryRowView(category: category)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("categoryEditList.categoryRow-\(category.name)")
@@ -43,7 +44,7 @@ struct CategoryEditListView: View {
           .titleNoCategories, systemImage: "flag", description: Text(.descriptionNoCategories))
       }
     }
-    .navigationTitle(.titleEditCategories)
+    .navigationTitle(.titleCategories)
     .alert(.titleDeleteCategory, item: $deleteCategory) { category in
       Button(.buttonKeepShifts) {
         let shifts = category.shifts
@@ -72,16 +73,10 @@ struct CategoryEditListView: View {
       Text(.descriptionDeleteCategory(name: category.name))
     }
     .toolbar {
-      ToolbarItem(placement: .topBarLeading) {
+      ToolbarItem(placement: .topBarTrailing) {
         Button(.buttonAddCategory, systemImage: "plus") {
           showAddCategory = true
         }
-      }
-      ToolbarItem(placement: .confirmationAction) {
-        Button(.buttonDone, systemImage: "checkmark") {
-          dismiss()
-        }
-        .accessibilityIdentifier("categoryEditList.doneButton")
       }
     }
     .sheet(isPresented: $showAddCategory) {
@@ -106,11 +101,13 @@ struct CategoryEditListView: View {
       CategoryEditListView(notificationService: NotificationService())
     }
     .modelContainer(PreviewSupport.inMemoryContainer())
+    .environment(AppSettings())
   }
 
   #Preview {
     NavigationStack {
       CategoryEditListView(notificationService: NotificationService())
     }
+    .environment(AppSettings())
   }
 #endif

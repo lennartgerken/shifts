@@ -1,5 +1,11 @@
+import OSLog
 import SwiftData
 import SwiftUI
+
+private let logger = Logger(
+  subsystem: Bundle.main.bundleIdentifier!,
+  category: "SettingsView"
+)
 
 struct SettingsView: View {
   let notificationService: NotificationServicing
@@ -8,58 +14,46 @@ struct SettingsView: View {
   @Environment(\.dismiss) private var dismiss
   @Environment(\.modelContext) private var modelContext
 
-  @State private var showEditTags = false
-  @State private var showEditCategories = false
-  @State private var showEditShiftReferences = false
+  @State private var showEditNotification = false
 
   var body: some View {
     @Bindable var settings = settings
 
     Form {
-      SettingsImportSectionView()
-      Section {
-        Button(.buttonEditTags, systemImage: "tag") {
-          showEditTags = true
-        }
-        .accessibilityIdentifier("settings.editTagsButton")
-        Button(.buttonEditCategories, systemImage: "flag") {
-          showEditCategories = true
-        }
-        .accessibilityIdentifier("settings.editCategoriesButton")
-        Button(
-          .buttonDeleteShiftReferences,
-          systemImage: "document.on.document"
-        ) {
-          showEditShiftReferences = true
-        }
-        .accessibilityIdentifier("settings.deleteShiftReferencesButton")
-        SettingsNotificationsSectionView(notificationService: notificationService)
+      NavigationLink(.buttonImportSettings) {
+        SettingsImportView()
       }
-    }
-    .sheet(
-      isPresented: $showEditTags,
-      content: {
-        NavigationStack {
+      Section {
+        NavigationLink(.buttonEditTags) {
           TagEditListView(notificationService: notificationService)
         }
-      }
-    )
-    .sheet(
-      isPresented: $showEditCategories,
-      content: {
-        NavigationStack {
+        .accessibilityIdentifier("settings.editTagsButton")
+        NavigationLink(.buttonEditCategories) {
           CategoryEditListView(notificationService: notificationService)
         }
-      }
-    )
-    .sheet(
-      isPresented: $showEditShiftReferences,
-      content: {
-        NavigationStack {
+        .accessibilityIdentifier("settings.editCategoriesButton")
+        NavigationLink(.buttonDeleteShiftReferences) {
           ShiftReferenceEditListView()
         }
+        .accessibilityIdentifier("settings.deleteShiftReferencesButton")
+        NavigationLink(.buttonEditReminders) {
+          NotificationTimingsListView(
+            notificationTimings: $settings.notificationTimings
+          )
+        }
+        .onChange(of: settings.notificationTimings) { _, _ in
+          Task {
+            do {
+              try await notificationService.scheduleUpcomingShifts(
+                modelContext: modelContext, notificationTimings: settings.notificationTimings)
+            } catch {
+              logger.error("Could not schedule notifications: \(error)")
+            }
+          }
+        }
+        .accessibilityIdentifier("settings.editRemindersButton")
       }
-    )
+    }
     .navigationTitle(.titleSettings)
     .toolbar {
       ToolbarItem(placement: .confirmationAction) {

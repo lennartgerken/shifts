@@ -15,6 +15,10 @@ struct CalendarScreen {
     app.buttons["calendar.importShiftsButton"]
   }
 
+  var shareButton: XCUIElement {
+    app.buttons["calendar.shareButton"]
+  }
+
   var settingsButton: XCUIElement {
     app.buttons["calendar.settingsButton"]
   }

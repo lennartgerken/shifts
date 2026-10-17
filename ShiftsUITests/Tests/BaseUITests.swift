@@ -2,6 +2,7 @@ import XCTest
 
 class BaseUITests: XCTestCase {
   let calendar = Calendar.current
+  var additionalLaunchArguments: [String] = []
   var app: XCUIApplication!
 
   override func setUpWithError() throws {
@@ -10,6 +11,7 @@ class BaseUITests: XCTestCase {
     app.launchArguments += [
       "--uitesting"
     ]
+    app.launchArguments += additionalLaunchArguments
     app.launch()
   }
 }

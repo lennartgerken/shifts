@@ -9,6 +9,9 @@
     }
   ],
   "defaultOptions" : {
+    "environmentVariableEntries" : [
+
+    ],
     "language" : "de",
     "performanceAntipatternCheckerEnabled" : true,
     "region" : "DE",

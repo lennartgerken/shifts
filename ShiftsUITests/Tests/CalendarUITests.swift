@@ -15,6 +15,7 @@ final class CalendarUITests: BaseUITests {
 
     calendarScreen.selectDate(date)
 
+    XCTAssert(dayRow.element.waitForExistence(timeout: 5))
     XCTAssertEqual(dayRow.dayImage.label, "Zahl Eins Auf Einer Kalenderseite")
     XCTAssertEqual(
       dayRow.weekdayText.label,
@@ -41,6 +42,7 @@ final class CalendarUITests: BaseUITests {
 
     calendarScreen.selectDate(date)
 
+    XCTAssert(dayRow.element.waitForExistence(timeout: 5))
     XCTAssert(dayRow.tagImage(for: "Tag 1").exists)
     XCTAssert(dayRow.tagImage(for: "Tag 2").exists)
     XCTAssert(dayRow.notesImage.exists)
@@ -64,6 +66,7 @@ final class CalendarUITests: BaseUITests {
     let dayRow = calendarScreen.dayRow(for: date)
 
     calendarScreen.selectDate(date)
+    XCTAssert(dayRow.element.waitForExistence(timeout: 5))
     dayRow.element.press(forDuration: 1)
     calendarScreen.referenceButton(for: "Reference 1").tap()
 

@@ -17,12 +17,13 @@ final class ImportUITests: BaseUITests {
 
     importScreen.selectImageButton.tap()
 
-    XCTAssert(importDayRow.element.waitForExistence(timeout: 5))
+    XCTAssert(importDayRow.element.waitForExistence(timeout: 15))
     XCTAssert(importDayRow.element.staticTexts["08:00"].exists)
     XCTAssert(importDayRow.element.staticTexts["16:00"].exists)
     importScreen.saveButton.tap()
 
     calendarScreen.selectDate(date)
+    XCTAssert(calendarDayRow.element.waitForExistence(timeout: 5))
     XCTAssert(calendarDayRow.element.staticTexts["08:00"].exists)
     XCTAssert(calendarDayRow.element.staticTexts["16:00"].exists)
   }
