@@ -22,7 +22,7 @@ final class SettingsUITests: BaseUITests {
     tagRow.swipeLeft()
     app.buttons["Löschen"].tap()
 
-    XCTAssert(!tagRow.exists)
+    XCTAssert(tagRow.waitForNonExistence(timeout: 5))
     XCTAssert(tagEditListScreen.tagRow(for: "Tag 2").exists)
   }
 
@@ -38,7 +38,7 @@ final class SettingsUITests: BaseUITests {
     categoryRow.swipeLeft()
     app.buttons["Löschen"].tap()
     categoryEditListScreen.keepShiftsButton.tap()
-    XCTAssert(!categoryRow.exists)
+    XCTAssert(categoryRow.waitForNonExistence(timeout: 5))
 
     app.buttons["BackButton"].tap()
     settingsScreen.doneButton.tap()
@@ -61,7 +61,7 @@ final class SettingsUITests: BaseUITests {
     categoryRow.swipeLeft()
     app.buttons["Löschen"].tap()
     categoryEditListScreen.deleteShiftsButton.tap()
-    XCTAssert(!categoryRow.exists)
+    XCTAssert(categoryRow.waitForNonExistence(timeout: 5))
 
     app.buttons["BackButton"].tap()
     settingsScreen.doneButton.tap()
@@ -82,7 +82,7 @@ final class SettingsUITests: BaseUITests {
     referenceRow.swipeLeft()
     app.buttons["Löschen"].tap()
 
-    XCTAssert(!referenceRow.exists)
+    XCTAssert(referenceRow.waitForNonExistence(timeout: 5))
   }
 
   func testRemoveReminder() {
@@ -93,7 +93,7 @@ final class SettingsUITests: BaseUITests {
     timingRow.swipeLeft()
     app.buttons["Löschen"].tap()
 
-    XCTAssert(!timingRow.exists)
+    XCTAssert(timingRow.waitForNonExistence(timeout: 5))
   }
 
   func testAddReminder() {
@@ -110,6 +110,8 @@ final class SettingsUITests: BaseUITests {
     notificationTimingAddScreen.setTypePicker(to: type)
     notificationTimingAddScreen.saveButton.tap()
 
-    XCTAssert(notificationTimingsListScreen.getTimingRow(value: count, timing: type).exists)
+    XCTAssert(
+      notificationTimingsListScreen.getTimingRow(value: count, timing: type).waitForExistence(
+        timeout: 5))
   }
 }
