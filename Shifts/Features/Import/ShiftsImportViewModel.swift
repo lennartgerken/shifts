@@ -26,27 +26,6 @@ final class ShiftsImportViewModel {
 
   var isLoading: Bool = false
   var importedShifts: [ParsedShift]?
-  var importedDays: [Day]? {
-    guard let parsedShifts = importedShifts else { return nil }
-
-    var dates: Set<Date> = []
-    for parsedShift in parsedShifts {
-      let start = calendar.startOfDay(for: parsedShift.start)
-      let end = calendar.startOfDay(for: parsedShift.end)
-      dates.insert(start)
-      dates.insert(end)
-    }
-
-    let shifts = parsedShifts.compactMap({ parsedShift in
-      try? Shift(start: parsedShift.start, end: parsedShift.end)
-    })
-
-    return dates.map { date in
-      Day(date: date, shifts: shifts)
-    }.sorted { day1, day2 in
-      day1.dateInterval.start < day2.dateInterval.start
-    }
-  }
   var errorMessage: String?
 
   var category: Category?

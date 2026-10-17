@@ -1,6 +1,6 @@
 import Foundation
 
-struct ParsedShift {
+struct ParsedShift: Codable {
   let start: Date
   let end: Date
 }

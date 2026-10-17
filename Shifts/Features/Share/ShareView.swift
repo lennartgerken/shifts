@@ -44,7 +44,7 @@ struct ShareView: View {
   private var export: ShiftPileExport {
     ShiftPileExport(
       shifts: shiftsToExport.map({ shift in
-        ShiftExport(start: shift.start, end: shift.end)
+        ParsedShift(start: shift.start, end: shift.end)
       }))
   }
 
@@ -104,9 +104,7 @@ struct ShareView: View {
       }
       if shiftsToExport.count > 0 {
         Section(.titlePreview) {
-          ForEach(shiftsToExport) { shift in
-            DayRowView(day: Day(date: shift.start, shifts: shiftsToExport), style: .fullDate)
-          }
+          ParsedShiftListView(parsedShifts: export.shifts)
         }
       }
     }

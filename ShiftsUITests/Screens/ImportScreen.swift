@@ -15,6 +15,6 @@ struct ImportScreen {
     let startOfDay = Calendar.current.startOfDay(for: date)
     return DayRow(
       element: app.staticTexts[
-        "shiftsImport.dayRow-\(startOfDay.formatted(.iso8601.year().month().day()))"])
+        "parsedShiftList.dayRow-\(startOfDay.formatted(.iso8601.year().month().day()))"])
   }
 }

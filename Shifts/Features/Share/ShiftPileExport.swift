@@ -8,23 +8,23 @@ extension UTType {
 
 struct ShiftPileExport: Codable, Sendable, Transferable {
   static var transferRepresentation: some TransferRepresentation {
-    CodableRepresentation(
-      contentType: .shiftPile
-    )
-    .suggestedFileName("shifts.shiftpile")
+    FileRepresentation(exportedContentType: .shiftPile) { export in
+      let url = FileManager.default.temporaryDirectory
+        .appending(path: "\(UUID().uuidString).shiftpile")
+
+      let data = try JSONEncoder().encode(export)
+      try data.write(to: url, options: .atomic)
+
+      return SentTransferredFile(url)
+    }
   }
   static let currentVersion = 1
 
   let version: Int
-  let shifts: [ShiftExport]
+  let shifts: [ParsedShift]
 
-  init(shifts: [ShiftExport]) {
+  init(shifts: [ParsedShift]) {
     self.version = Self.currentVersion
     self.shifts = shifts
   }
-}
-
-struct ShiftExport: Codable, Sendable {
-  let start: Date
-  let end: Date
 }
