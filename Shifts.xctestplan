@@ -10,10 +10,7 @@
   ],
   "defaultOptions" : {
     "environmentVariableEntries" : [
-      {
-        "key" : "TZ",
-        "value" : "Europe\/Berlin"
-      }
+
     ],
     "language" : "de",
     "performanceAntipatternCheckerEnabled" : true,

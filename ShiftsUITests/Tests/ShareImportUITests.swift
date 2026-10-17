@@ -10,10 +10,14 @@ final class ShareImportUITests: BaseUITests {
   }
 
   func testShareShifts() throws {
-    let importDayRow = importScreen.dayRow(
-      for: Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 2))!)
+    let shiftStart = Date(timeIntervalSinceReferenceDate: 789_030_000)
+    let shiftEnd = Date(timeIntervalSinceReferenceDate: 789_058_800)
+
+    let importDayRow = importScreen.dayRow(for: shiftStart)
     XCTAssert(importDayRow.element.waitForExistence(timeout: 5))
-    XCTAssert(importDayRow.element.staticTexts["08:00"].exists)
-    XCTAssert(importDayRow.element.staticTexts["16:00"].exists)
+    XCTAssert(
+      importDayRow.element.staticTexts[shiftStart.formatted(.dateTime.hour().minute())].exists)
+    XCTAssert(
+      importDayRow.element.staticTexts[shiftEnd.formatted(.dateTime.hour().minute())].exists)
   }
 }
